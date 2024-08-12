@@ -1,5 +1,6 @@
-package com.example.dhandha.serviceCell
+package com.example.dhandha.servicecontainer.serviceCell
 
+import android.graphics.ImageFormat
 import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.House
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -27,6 +30,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
@@ -45,11 +49,8 @@ fun ServiceCell(viewModel: ServiceCellViewModel) {
     Box(contentAlignment = Alignment.Center,modifier = Modifier
         .height(130.dp)
         .clip(RoundedCornerShape(8.dp))
-        .background(
-            brush = Brush.linearGradient(
-                listOf(viewModel.color, Color.Black)
-            )
-        )) {
+        .background(brush =  Brush.verticalGradient(listOf(viewModel.color, Color.Black)))
+    ) {
         Icon(modifier = Modifier.size(100.dp),painter = painterResource(id = viewModel.imageId), contentDescription = "", tint = Color.White)
     }
 }
