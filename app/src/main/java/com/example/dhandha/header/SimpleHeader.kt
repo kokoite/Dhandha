@@ -42,7 +42,7 @@ fun SimpleHeader() {
             .fillMaxSize(1f),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(painter = painterResource(id = R.drawable.person),
+            Image(painter = painterResource(id = R.drawable.happy_face),
                 contentDescription = "",
                 modifier = Modifier
                     .padding(start = 12.dp)

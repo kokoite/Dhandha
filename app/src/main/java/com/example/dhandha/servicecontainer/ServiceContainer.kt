@@ -25,10 +25,10 @@ import com.example.dhandha.servicecontainer.serviceCell.ServiceCell
 @Composable
 fun ServiceContainer() {
     val cellViewModel = listOf<ServiceCellViewModel>(
-        ServiceCellViewModel(color = Color.Yellow, imageId = R.drawable.house_fill),
-        ServiceCellViewModel(color = Color.Green, imageId = R.drawable.graduationcap_fill),
-        ServiceCellViewModel(color = Color.Red, imageId = R.drawable.dumbbell_fill),
-        ServiceCellViewModel(color = Color.Blue, imageId = R.drawable.book_fill))
+        ServiceCellViewModel(color = Color(red = 247, green = 206, blue = 69), imageId = R.drawable.house_fill),
+        ServiceCellViewModel(color = Color(red = 101, green = 196, blue = 102), imageId = R.drawable.graduationcap_fill),
+        ServiceCellViewModel(color = Color(red = 238, green = 68, blue = 90), imageId = R.drawable.dumbbell_fill),
+        ServiceCellViewModel(color = Color(red = 52, green = 120, blue = 247), imageId = R.drawable.book_fill))
     Card(colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .height(280.dp)

@@ -28,6 +28,6 @@ fun ProfileActivity() {
         ServiceContainer()
         Spacer(modifier = Modifier.height(20.dp))
         NotificationContainer()
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
