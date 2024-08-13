@@ -28,6 +28,6 @@ fun HomeActivity() {
         ServiceContainer()
         Spacer(modifier = Modifier.height(30.dp))
         ServiceContainer()
-        Spacer(modifier = Modifier.height(200.dp))
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
