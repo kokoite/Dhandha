@@ -23,6 +23,7 @@ fun HomeActivity() {
         .background(Color(red = 246, green = 246, blue = 255))
         .padding(20.dp)
         .verticalScroll(state = ScrollState(0))){
+        Spacer(modifier = Modifier.height(30.dp))
         SimpleHeader()
         Spacer(modifier = Modifier.height(30.dp))
         ServiceContainer()

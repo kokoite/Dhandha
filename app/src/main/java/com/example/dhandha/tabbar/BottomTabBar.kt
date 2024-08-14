@@ -62,6 +62,6 @@ fun BottomTabBar(navController: NavController) {
 
 
 sealed class NavigationItemViewModel (val title: String, val iconId: Int, val routeId: String) {
-    object HomeScreeNavigation: NavigationItemViewModel("Home", R.drawable.house_fill, routeId = "home"  )
-    object ProfileScreeNavigation: NavigationItemViewModel("Profile", iconId = R.drawable.person_fill, routeId = "profile")
+    object HomeScreeNavigation: NavigationItemViewModel("Home", R.drawable.house, routeId = "home"  )
+    object ProfileScreeNavigation: NavigationItemViewModel("Profile", iconId = R.drawable.person, routeId = "profile")
 }

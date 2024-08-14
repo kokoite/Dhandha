@@ -35,6 +35,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.dhandha.authentication.AuthenticationActivity
+import com.example.dhandha.header.AuthenticationHeader
 import com.example.dhandha.header.SimpleHeader
 import com.example.dhandha.home.HomeActivity
 import com.example.dhandha.profile.ProfileActivity
@@ -63,7 +65,7 @@ class MainActivity : ComponentActivity() {
 fun DhandhaApp(navController: NavHostController) {
     Scaffold(
         bottomBar = {
-        BottomTabBar(navController = navController)
+//        BottomTabBar(navController = navController)
 
     }) {
         Box(
@@ -76,7 +78,8 @@ fun DhandhaApp(navController: NavHostController) {
                 )
             )
         ) {
-            Navigations(navController = navController)
+//            Navigations(navController = navController)
+            AuthenticationActivity()
         }
     }
 }
@@ -85,7 +88,7 @@ fun DhandhaApp(navController: NavHostController) {
 fun Navigations(navController: NavHostController) {
     NavHost(navController = navController, startDestination = NavigationItemViewModel.HomeScreeNavigation.routeId) {
         composable(NavigationItemViewModel.HomeScreeNavigation.routeId) {
-            HomeActivity()
+            AuthenticationActivity()
         }
         composable(NavigationItemViewModel.ProfileScreeNavigation.routeId) {
             ProfileActivity()
