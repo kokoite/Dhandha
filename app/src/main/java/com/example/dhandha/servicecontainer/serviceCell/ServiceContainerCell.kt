@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,16 +41,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dhandha.R
+import com.example.dhandha.home.Service
 import com.example.dhandha.servicecontainer.ServiceCellViewModel
 
 
 @Composable
-fun ServiceCell(viewModel: ServiceCellViewModel) {
-    val width = LocalConfiguration.current.screenWidthDp
+fun ServiceCell(viewModel: ServiceCellViewModel, onClick: (type: Service)-> Unit) {
     Box(contentAlignment = Alignment.Center,modifier = Modifier
         .height(130.dp)
         .clip(RoundedCornerShape(8.dp))
-        .background(brush =  Brush.verticalGradient(listOf(viewModel.color, Color.Black)))
+        .background(brush =  Brush.verticalGradient(listOf(viewModel.color, Color.Black))).clickable {
+            onClick(viewModel.type)
+        }
     ) {
         Icon(modifier = Modifier.size(100.dp),painter = painterResource(id = viewModel.imageId), contentDescription = "", tint = Color.White)
     }

@@ -26,13 +26,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import com.example.dhandha.R
+import com.example.dhandha.ui.theme.AppTheme
 
 
 @Preview(showBackground = true, heightDp = 200, widthDp = 393)
 @Composable
 fun SimpleHeader() {
     Card(
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppTheme.colorScheme.primaryColor),
         modifier = Modifier
             .height(80.dp)
             .fillMaxWidth(1f),
@@ -54,7 +55,7 @@ fun SimpleHeader() {
             )
             Text(text = "Welcome back, Pranjal!",
                 modifier = Modifier.padding(start = 12.dp, end = 12.dp),
-                style = MaterialTheme.typography.titleLarge
+                style = AppTheme.typography.headerTitle
                 )
         }
     }

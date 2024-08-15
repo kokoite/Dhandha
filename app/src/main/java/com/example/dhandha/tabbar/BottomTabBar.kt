@@ -17,10 +17,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.dhandha.R
+import com.example.dhandha.ui.theme.AppTheme
 
 @Composable
 fun BottomTabBar(navController: NavController) {
-    val items = listOf(NavigationItemViewModel.HomeScreeNavigation, NavigationItemViewModel.ProfileScreeNavigation)
+    val items = listOf(NavigationItemViewModel.Home, NavigationItemViewModel.Profile)
 
     val selectedIndex = remember { mutableStateOf(0) }
 
@@ -33,7 +34,7 @@ fun BottomTabBar(navController: NavController) {
                 Color.Gray
             }
 
-            val labelStyle = MaterialTheme.typography.headlineMedium
+            val labelStyle = AppTheme.typography.label
             NavigationBarItem(
                 selected = selectedIndex.value == index,
                 onClick = {
@@ -41,7 +42,6 @@ fun BottomTabBar(navController: NavController) {
 
                     navController.navigate(item.routeId) {
                         navController.graph.startDestinationRoute?.let { route ->
-                            Log.d("NavigationRouting", "BottomTabBar: $route")
                             popUpTo(route) {
                                 saveState = true
                             }
@@ -62,6 +62,7 @@ fun BottomTabBar(navController: NavController) {
 
 
 sealed class NavigationItemViewModel (val title: String, val iconId: Int, val routeId: String) {
-    object HomeScreeNavigation: NavigationItemViewModel("Home", R.drawable.house, routeId = "home"  )
-    object ProfileScreeNavigation: NavigationItemViewModel("Profile", iconId = R.drawable.person, routeId = "profile")
+    object Home: NavigationItemViewModel("Home", R.drawable.house, routeId = "home"  )
+    object Profile: NavigationItemViewModel("Profile", iconId = R.drawable.person, routeId = "profile")
 }
+

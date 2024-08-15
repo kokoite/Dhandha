@@ -1,5 +1,6 @@
 package com.example.dhandha.home
 
+import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -26,9 +27,21 @@ fun HomeActivity() {
         Spacer(modifier = Modifier.height(30.dp))
         SimpleHeader()
         Spacer(modifier = Modifier.height(30.dp))
-        ServiceContainer()
+        ServiceContainer("Services we provide", ::handleService)
         Spacer(modifier = Modifier.height(30.dp))
-        ServiceContainer()
+        ServiceContainer("Subscribed services", ::handleService)
         Spacer(modifier = Modifier.height(20.dp))
     }
+}
+
+private fun handleService(service: Service) {
+    Log.d("TAG", "handleService: $service")
+}
+
+
+sealed class Service {
+    object Rent: Service()
+    object Coaching: Service()
+    object Gym: Service()
+    object Library: Service()
 }

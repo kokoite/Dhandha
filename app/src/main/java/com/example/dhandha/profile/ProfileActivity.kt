@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.dhandha.header.ProfileHeader
+import com.example.dhandha.home.Service
 import com.example.dhandha.profile.notificationContainer.NotificationContainer
 import com.example.dhandha.servicecontainer.ServiceContainer
 
@@ -25,9 +26,13 @@ fun ProfileActivity() {
         .verticalScroll(ScrollState(0))) {
         ProfileHeader()
         Spacer(modifier = Modifier.height(20.dp))
-        ServiceContainer()
+        ServiceContainer("Subscribed services", ::handleService)
         Spacer(modifier = Modifier.height(20.dp))
         NotificationContainer()
         Spacer(modifier = Modifier.height(30.dp))
     }
+}
+
+private fun handleService(service: Service) {
+
 }
