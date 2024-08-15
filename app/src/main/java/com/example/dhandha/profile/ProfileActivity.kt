@@ -12,13 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.dhandha.header.ProfileHeader
-import com.example.dhandha.home.Service
 import com.example.dhandha.profile.notificationContainer.NotificationContainer
 import com.example.dhandha.servicecontainer.ServiceContainer
+import com.example.dhandha.services.Service
 
 @Composable
-fun ProfileActivity() {
+fun ProfileActivity(appNavController: NavController) {
     Column(modifier = Modifier
         .fillMaxSize(1f)
         .background(Color(red = 246, green = 246, blue = 255))

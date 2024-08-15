@@ -43,11 +43,10 @@ fun BottomTabBar(navController: NavController) {
                     navController.navigate(item.routeId) {
                         navController.graph.startDestinationRoute?.let { route ->
                             popUpTo(route) {
-                                saveState = true
+                                inclusive = true
                             }
                         }
                         launchSingleTop = true
-                        restoreState = true
                     }
             },
                 icon = { Icon(painterResource(id = item.iconId),contentDescription = item.title, tint = tintColor) },

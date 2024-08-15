@@ -41,8 +41,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dhandha.R
-import com.example.dhandha.home.Service
 import com.example.dhandha.servicecontainer.ServiceCellViewModel
+import com.example.dhandha.services.Service
 
 
 @Composable

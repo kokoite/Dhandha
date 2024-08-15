@@ -12,13 +12,33 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.dhandha.Screen
 import com.example.dhandha.header.SimpleHeader
 import com.example.dhandha.servicecontainer.ServiceContainer
+import com.example.dhandha.services.Service
+import com.example.dhandha.services.coaching.CoachingActivity
+import com.example.dhandha.services.gym.GymActivity
+import com.example.dhandha.services.library.LibraryActivity
+import com.example.dhandha.services.rent.RentActivity
+import com.example.dhandha.tabbar.NavigationItemViewModel
 
 
 @Composable
-fun HomeActivity() {
+fun HomeActivity(appNavController: NavController) {
+    HomeScreen(appNavController)
+}
+
+
+@Composable
+private fun HomeScreen(appNavController: NavController) {
     Column (modifier = Modifier
         .fillMaxSize(1f)
         .background(Color(red = 246, green = 246, blue = 255))
@@ -27,21 +47,19 @@ fun HomeActivity() {
         Spacer(modifier = Modifier.height(30.dp))
         SimpleHeader()
         Spacer(modifier = Modifier.height(30.dp))
-        ServiceContainer("Services we provide", ::handleService)
+        ServiceContainer("Services we provide") {service ->
+            handleService(service, appNavController)
+        }
         Spacer(modifier = Modifier.height(30.dp))
-        ServiceContainer("Subscribed services", ::handleService)
+        ServiceContainer("Subscribed services") {service ->
+
+        }
         Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
-private fun handleService(service: Service) {
-    Log.d("TAG", "handleService: $service")
-}
+private fun handleService(service: Service, navController: NavController) {
+    navController.navigate(route = Screen.Rent.routeId) {
 
-
-sealed class Service {
-    object Rent: Service()
-    object Coaching: Service()
-    object Gym: Service()
-    object Library: Service()
+    }
 }
