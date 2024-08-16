@@ -47,7 +47,8 @@ private val appTypography = AppTypography(
     headerTitle = TextStyle(fontSize = 24.sp, fontFamily = Roboto, fontWeight = FontWeight.Bold ),
     containerTitle = TextStyle(fontSize = 16.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold, color = Color.LightGray),
     label = TextStyle(fontSize = 16.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold),
-    placeholder =  TextStyle(fontSize = 14.sp, fontFamily = Roboto, fontWeight = FontWeight.Normal, color = Color.Gray)
+    placeholder =  TextStyle(fontSize = 14.sp, fontFamily = Roboto, fontWeight = FontWeight.Normal, color = Color.Gray),
+    buttonText = TextStyle(fontSize = 15.sp, fontFamily = Roboto, fontWeight = FontWeight.Normal)
 )
 
 @Composable

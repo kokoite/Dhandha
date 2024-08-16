@@ -19,7 +19,8 @@ data class AppTypography(
     val headerTitle: TextStyle,
     val containerTitle: TextStyle,
     val label: TextStyle,
-    val placeholder: TextStyle
+    val placeholder: TextStyle,
+    val buttonText: TextStyle
 )
 
 // shape
@@ -47,7 +48,8 @@ val LocalAppTypography = staticCompositionLocalOf {
         headerTitle = TextStyle.Default,
         containerTitle = TextStyle.Default,
         label = TextStyle.Default,
-        placeholder = TextStyle.Default
+        placeholder = TextStyle.Default,
+        buttonText = TextStyle.Default
         )
 }
 

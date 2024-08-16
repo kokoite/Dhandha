@@ -38,7 +38,7 @@ fun CustomTextField(
         decorationBox = { innerTextField ->
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 8.dp, vertical = 4.dp),  // Inner padding and background color
+                    .padding( vertical = 2.dp),  // Inner padding and background color
                 verticalAlignment = Alignment.CenterVertically
             ) {
 

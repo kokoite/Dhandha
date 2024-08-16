@@ -25,19 +25,27 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.dhandha.botttomsheet.ActionBottomSheet
 import com.example.dhandha.customviews.Carousel
 import com.example.dhandha.ui.theme.AppTheme
 
+
+
 @Composable
 fun RentDetailActivity(navController: NavController) {
+    val editButtonClicked = remember { mutableStateOf(false) }
     Scaffold(
         floatingActionButton = {
-            IconButton(onClick = { }, modifier = Modifier
+            IconButton(onClick = {
+                editButtonClicked.value = true
+            }, modifier = Modifier
                 .padding(bottom = 20.dp, end = 20.dp)
                 .clip(CircleShape)
                 .background(Color.Black)) {
@@ -65,23 +73,37 @@ fun RentDetailActivity(navController: NavController) {
                 TenantDetailContainer()
                 Spacer(modifier = Modifier.height(30.dp))
             }
+
+            if(editButtonClicked.value) {
+                ActionBottomSheet {
+                    editButtonClicked.value = false
+                }
+            }
         }
     }
+}
+
+@Composable
+private fun showBottomSheet() {
+
 }
 
 @Composable
 fun PropertyImageContainer() {
     Card (modifier = Modifier
         .fillMaxWidth(1f)
-        .height(300.dp).clip(RoundedCornerShape(20.dp)), colors = CardDefaults.cardColors(containerColor = Color.White)){
+        .height(300.dp)
+        .clip(RoundedCornerShape(20.dp)), colors = CardDefaults.cardColors(containerColor = Color.White)){
         Carousel()
     }
 }
 
 @Composable
 fun TenantDetailContainer() {
+
     Card(modifier = Modifier
-        .fillMaxWidth(1f).clip(RoundedCornerShape(20.dp))
+        .fillMaxWidth(1f)
+        .clip(RoundedCornerShape(20.dp))
         , colors = CardDefaults.cardColors(Color.White)) {
         
         Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, top  = 20.dp, bottom = 40.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {

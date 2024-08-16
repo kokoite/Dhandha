@@ -13,9 +13,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dhandha.authentication.AuthenticationActivity
+import com.example.dhandha.botttomsheet.ActionBottomSheet
 import com.example.dhandha.mainapp.MainAppActivity
 import com.example.dhandha.services.gym.GymActivity
 import com.example.dhandha.services.rent.RentActivity
+import com.example.dhandha.services.rent.create.CreateTenantActivity
 import com.example.dhandha.services.rent.detail.RentDetailActivity
 import com.example.dhandha.ui.theme.AppTheme
 
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun Routing(navController: NavHostController) {
 
-    NavHost(navController = navController, startDestination = Screen.RentDetail.routeId) {
+    NavHost(navController = navController, startDestination = Screen.MainApp.routeId) {
 
         composable(Screen.Authentication.routeId) {
             AuthenticationActivity(navController)
@@ -54,7 +56,11 @@ private fun Routing(navController: NavHostController) {
         }
 
         composable(Screen.RentDetail.routeId) {
-            RentDetailActivity(navController)
+            RentDetailActivity(navController = navController)
+        }
+
+        composable(Screen.CreateTenant.routeId) {
+            CreateTenantActivity()
         }
 
         composable(Screen.Gym.routeId) {
@@ -71,6 +77,7 @@ sealed class Screen(val routeId: String) {
     object Authentication: Screen(routeId = "authentication")
     object Rent: Screen("rent")
     object RentDetail: Screen(routeId = "rentDetail")
+    object CreateTenant: Screen(routeId = "createTenant")
     object Coaching: Screen("coaching")
     object Gym: Screen("gym")
     object Library: Screen("library")
