@@ -31,8 +31,8 @@ private val DarkColorScheme = AppColorScheme(
 
 private val LightColorScheme = AppColorScheme(
     background = Color(red = 246, green = 246, blue = 255),
-    primaryColor = Color.Black,
-    secondaryColor = Color.Black
+    primaryColor = Color.White,
+    secondaryColor = Color.White
 )
 
 private val Roboto = FontFamily(
@@ -46,8 +46,8 @@ private val Roboto = FontFamily(
 private val appTypography = AppTypography(
     headerTitle = TextStyle(fontSize = 24.sp, fontFamily = Roboto, fontWeight = FontWeight.Bold ),
     containerTitle = TextStyle(fontSize = 16.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold, color = Color.LightGray),
-    label = TextStyle(fontSize = 15.sp, fontFamily = Roboto, fontWeight = FontWeight.Light),
-    placeholder =  TextStyle(fontSize = 18.sp, fontFamily = Roboto, fontWeight = FontWeight.Black)
+    label = TextStyle(fontSize = 16.sp, fontFamily = Roboto, fontWeight = FontWeight.SemiBold),
+    placeholder =  TextStyle(fontSize = 14.sp, fontFamily = Roboto, fontWeight = FontWeight.Normal, color = Color.Gray)
 )
 
 @Composable
@@ -68,7 +68,7 @@ fun AppTheme(
     val colorScheme = if(darkTheme) {
         LightColorScheme
     } else {
-        DarkColorScheme
+        LightColorScheme
     }
 
     CompositionLocalProvider(

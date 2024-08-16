@@ -3,6 +3,7 @@ package com.example.dhandha.services.rent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,22 +32,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dhandha.R
+import com.example.dhandha.ui.theme.AppTheme
 
-@Preview(showBackground = true, heightDp = 400, widthDp = 394)
 @Composable
-fun UserListCell() {
-    Box(modifier = Modifier.padding(20.dp).background(Color.Red).clip(
-        RoundedCornerShape(20.dp)
-    ).border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(20.dp)).clipToBounds()) {
+fun UserListCell(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+        .padding(0.dp)
+        .clip(RoundedCornerShape(20.dp))
+        .background(Color.White).clickable {
+                onClick()
+            }
+        ) {
         Row(modifier = Modifier
-            .padding(12.dp)
+            .padding(horizontal = 12.dp)
             .fillMaxWidth(1f), verticalAlignment = Alignment.CenterVertically) {
            Image(painter = painterResource(id = R.drawable.happy_face), contentDescription = "", modifier = Modifier
-               .height(200.dp)
-               .width(150.dp)
+               .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
+               .height(100.dp)
+               .width(100.dp)
                .background(
                    Color.Yellow
-               ))
+               ), contentScale = ContentScale.FillBounds)
             Spacer(modifier = Modifier.width(20.dp))
             UserDetailContainer(Modifier.weight(1f))
         }
