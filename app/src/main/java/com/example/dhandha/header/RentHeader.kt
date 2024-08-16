@@ -24,22 +24,4 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-@Preview(showBackground =  true, showSystemUi = true)
-@Composable
-fun RentHeader() {
-
-    Column {
-        SimpleHeader()
-        Spacer(modifier = Modifier.height(20.dp))
-        SearchView()
-    }
-}
-
-@Composable
-fun SearchView() {
-    val text = remember { mutableStateOf("") }
-    Box(modifier = Modifier.clip(RoundedCornerShape(12.dp)).fillMaxWidth(1f).background(Color.White)) {
-       SearchTextField( textState = text, placeholderText = "Search you clients here", modifier = Modifier.padding(vertical = 8.dp).clip(RoundedCornerShape(12.dp)))
-    }
-}
 

@@ -39,8 +39,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.dhandha.header.CreateUserHeader
+import com.example.dhandha.R
+import com.example.dhandha.header.GeneralHeader
 import com.example.dhandha.ui.theme.AppTheme
 
 @Composable
@@ -58,7 +60,7 @@ fun CreateTenantActivity() {
         Column(modifier = Modifier
             .padding(20.dp)
             .verticalScroll(ScrollState(0)), verticalArrangement = Arrangement.spacedBy(30.dp)) {
-            CreateUserHeader()
+            GeneralHeader("Lets Add Tenants !!", painter = painterResource(id = R.drawable.house_fill))
             CreateUserContainer()
             Spacer(modifier = Modifier.height(0.dp))
         }

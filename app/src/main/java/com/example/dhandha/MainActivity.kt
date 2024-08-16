@@ -18,6 +18,7 @@ import com.example.dhandha.mainapp.MainAppActivity
 import com.example.dhandha.services.gym.GymActivity
 import com.example.dhandha.services.rent.RentActivity
 import com.example.dhandha.services.rent.create.CreateTenantActivity
+import com.example.dhandha.services.rent.dashboard.RentDashboardActivity
 import com.example.dhandha.services.rent.detail.RentDetailActivity
 import com.example.dhandha.ui.theme.AppTheme
 
@@ -63,6 +64,10 @@ private fun Routing(navController: NavHostController) {
             CreateTenantActivity()
         }
 
+        composable(Screen.RentDashbaord.routeId) {
+            RentDashboardActivity()
+        }
+
         composable(Screen.Gym.routeId) {
             GymActivity(navController = navController)
         }
@@ -78,6 +83,7 @@ sealed class Screen(val routeId: String) {
     object Rent: Screen("rent")
     object RentDetail: Screen(routeId = "rentDetail")
     object CreateTenant: Screen(routeId = "createTenant")
+    object RentDashbaord: Screen(routeId = "rentDashboard")
     object Coaching: Screen("coaching")
     object Gym: Screen("gym")
     object Library: Screen("library")

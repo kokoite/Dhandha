@@ -14,12 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.dhandha.R
 import com.example.dhandha.Screen
 import com.example.dhandha.header.SimpleHeader
 import com.example.dhandha.servicecontainer.ServiceContainer
@@ -45,7 +47,7 @@ private fun HomeScreen(appNavController: NavController) {
         .padding(20.dp)
         .verticalScroll(state = ScrollState(0))){
         Spacer(modifier = Modifier.height(30.dp))
-        SimpleHeader()
+        SimpleHeader(title = "Welcome back Pranjal!!", painter = painterResource(id = R.drawable.happy_face))
         Spacer(modifier = Modifier.height(30.dp))
         ServiceContainer("Services we provide") {service ->
             handleService(service, appNavController)

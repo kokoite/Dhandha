@@ -1,5 +1,6 @@
 package com.example.dhandha.services.rent
 
+import SearchTextField
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -26,16 +28,20 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.dhandha.R
 import com.example.dhandha.Screen
-import com.example.dhandha.header.RentHeader
+import com.example.dhandha.header.GeneralHeader
+import com.example.dhandha.header.SimpleHeader
 import com.example.dhandha.ui.theme.AppTheme
 
 @Composable
@@ -47,10 +53,15 @@ fun RentActivity(navController: NavController) {
         floatingActionButton = {
             IconButton(onClick = {
                print("clicked")
-            }, modifier = Modifier.clip(CircleShape).background(Color.Black)) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "", tint = Color.White, modifier = Modifier.height(20.dp).width(20.dp).clickable {
-                    navController.navigate(Screen.CreateTenant.routeId)
-                })
+            }, modifier = Modifier
+                .clip(CircleShape)
+                .background(Color.Black)) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "", tint = Color.White, modifier = Modifier
+                    .height(20.dp)
+                    .width(20.dp)
+                    .clickable {
+                        navController.navigate(Screen.CreateTenant.routeId)
+                    })
             }
         }
 
@@ -64,7 +75,7 @@ fun RentActivity(navController: NavController) {
             }) {
             Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(30.dp)) {
 
-                RentHeader()
+                Header(navController)
                 RentUserContainer(navController)
             }
         }
@@ -72,6 +83,31 @@ fun RentActivity(navController: NavController) {
 
 }
 
+@Composable
+fun Header(navController: NavController) {
+    Column {
+        SimpleHeader(title = "Welcome back Pranjal!!", painterResource(id = R.drawable.happy_face), action = {
+            navController.navigate(route = Screen.RentDashbaord.routeId)
+        })
+        Spacer(modifier = Modifier.height(20.dp))
+        SearchView()
+    }
+}
+
+@Composable
+fun SearchView() {
+    val text = remember { mutableStateOf("") }
+    Box(modifier = Modifier
+        .clip(RoundedCornerShape(12.dp))
+        .fillMaxWidth(1f)
+        .background(Color.White)) {
+        SearchTextField( textState = text, placeholderText = "Search you clients here", modifier = Modifier
+            .padding(vertical = 8.dp)
+            .clip(
+                RoundedCornerShape(12.dp)
+            ))
+    }
+}
 
 @Composable
 fun RentUserContainer(navController: NavController) {
