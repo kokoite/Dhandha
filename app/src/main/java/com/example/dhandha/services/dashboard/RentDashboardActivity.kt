@@ -1,4 +1,4 @@
-package com.example.dhandha.services.rent.dashboard
+package com.example.dhandha.services.dashboard
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
@@ -44,13 +44,14 @@ fun RentDashboardActivity() {
             .verticalScroll(ScrollState(0)), verticalArrangement = Arrangement.spacedBy(30.dp)) {
             GeneralHeader(title = "Know your Income",painterResource(id = R.drawable.house_fill))
             EarningContainer()
+            PendingPaymentContainer()
             TransactionContainer()
         }
     }
 }
 
 @Composable
-fun EarningContainer() {
+private fun EarningContainer() {
     Card(modifier = Modifier
         .fillMaxWidth(1f)
         .height(200.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
@@ -78,7 +79,12 @@ fun EarningContainer() {
 }
 
 @Composable
-fun TransactionContainer() {
+private fun PendingPaymentContainer() {
+
+}
+
+@Composable
+private fun TransactionContainer() {
     Card(modifier = Modifier
         .clip(RoundedCornerShape(20.dp))
         .fillMaxWidth(1f)

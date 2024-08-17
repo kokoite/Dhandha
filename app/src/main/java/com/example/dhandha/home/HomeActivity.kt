@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -23,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dhandha.R
 import com.example.dhandha.Screen
+import com.example.dhandha.botttomsheet.ServiceBottomSheet
 import com.example.dhandha.header.SimpleHeader
 import com.example.dhandha.servicecontainer.ServiceContainer
 import com.example.dhandha.services.Service
@@ -41,6 +44,10 @@ fun HomeActivity(appNavController: NavController) {
 
 @Composable
 private fun HomeScreen(appNavController: NavController) {
+    val shouldShowBottomSheet = remember {
+        mutableStateOf(false
+        )
+    }
     Column (modifier = Modifier
         .fillMaxSize(1f)
         .background(Color(red = 246, green = 246, blue = 255))
@@ -50,18 +57,32 @@ private fun HomeScreen(appNavController: NavController) {
         SimpleHeader(title = "Welcome back Pranjal!!", painter = painterResource(id = R.drawable.happy_face))
         Spacer(modifier = Modifier.height(30.dp))
         ServiceContainer("Services we provide") {service ->
-            handleService(service, appNavController)
+            shouldShowBottomSheet.value = true
         }
         Spacer(modifier = Modifier.height(30.dp))
         ServiceContainer("Subscribed services") {service ->
-
+            handleService(service, appNavController)
         }
         Spacer(modifier = Modifier.height(20.dp))
+        if(shouldShowBottomSheet.value) {
+            ServiceBottomSheet {
+                shouldShowBottomSheet.value = false
+            }
+        }
     }
 }
 
-private fun handleService(service: Service, navController: NavController) {
-    navController.navigate(route = Screen.Rent.routeId) {
 
+private fun handleService(service: Service, navController: NavController) {
+
+    when(service) {
+         is Service.Gym ->
+             navController.navigate(Screen.Gym.routeId)
+        is Service.Coaching ->
+            navController.navigate(Screen.Coaching.routeId)
+        is Service.Rent ->
+            navController.navigate(Screen.Rent.routeId)
+        is Service.Library ->
+            navController.navigate(Screen.Library.routeId)
     }
 }

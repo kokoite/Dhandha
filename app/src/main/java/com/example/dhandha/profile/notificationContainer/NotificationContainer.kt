@@ -41,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.dhandha.R
+import com.example.dhandha.ui.theme.AppTheme
 
 @Composable
 fun NotificationContainer() {
@@ -48,7 +49,7 @@ fun NotificationContainer() {
         .height(300.dp)
         .fillMaxWidth(1f), colors = CardDefaults.cardColors(containerColor = Color.White)) {
             Spacer(modifier = Modifier.height(12.dp))
-            Text(text = "Pending Actions", style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(horizontal = 12.dp))
+            Text(text = "Pending Actions", style = AppTheme.typography.containerTitle, modifier = Modifier.padding(horizontal = 12.dp))
             Spacer(modifier = Modifier.height(12.dp))
             NotificationTable()
     }
@@ -91,7 +92,7 @@ fun NotificationTableCell() {
                 Text(text = "Payment Pending", style = MaterialTheme.typography.titleMedium)
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "You forgot to renew membership for your client xxxx")
+            Text(text = "You forgot to renew membership for your client xxxx", style = AppTheme.typography.label)
             ActionButton()
             Spacer(modifier = Modifier.height(8.dp))
             Spacer(modifier = Modifier

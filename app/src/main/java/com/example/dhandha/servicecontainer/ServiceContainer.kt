@@ -32,10 +32,10 @@ import com.example.dhandha.ui.theme.AppTheme
 @Composable
 fun ServiceContainer(title: String, onClick: (type: Service) -> Unit) {
     val cellViewModel = listOf(
-        ServiceCellViewModel(type = Service.Rent, color = Color(red = 247, green = 206, blue = 69), imageId = R.drawable.house_fill),
-        ServiceCellViewModel(type = Service.Coaching, color = Color(red = 101, green = 196, blue = 102), imageId = R.drawable.graduationcap_fill),
-        ServiceCellViewModel(type = Service.Gym, color = Color(red = 238, green = 68, blue = 90), imageId = R.drawable.dumbbell_fill),
-        ServiceCellViewModel(type = Service.Library, color = Color(red = 52, green = 120, blue = 247), imageId = R.drawable.book_fill))
+        ServiceCellViewModel(type = Service.Rent, color = Color(red = 247, green = 206, blue = 69), imageId = R.drawable.house_fill, true),
+        ServiceCellViewModel(type = Service.Coaching, color = Color(red = 101, green = 196, blue = 102), imageId = R.drawable.graduationcap_fill, false),
+        ServiceCellViewModel(type = Service.Gym, color = Color(red = 238, green = 68, blue = 90), imageId = R.drawable.dumbbell_fill, true),
+        ServiceCellViewModel(type = Service.Library, color = Color(red = 52, green = 120, blue = 247), imageId = R.drawable.book_fill, false))
     Card(colors = CardDefaults.cardColors(containerColor = Color.White),
         modifier = Modifier
             .height(280.dp)
@@ -56,4 +56,4 @@ fun ServiceContainer(title: String, onClick: (type: Service) -> Unit) {
 
 
 
-data class ServiceCellViewModel(val type: Service, val color: Color, val imageId: Int)
+data class ServiceCellViewModel(val type: Service, val color: Color, val imageId: Int, val shouldShowBottomSheet: Boolean)

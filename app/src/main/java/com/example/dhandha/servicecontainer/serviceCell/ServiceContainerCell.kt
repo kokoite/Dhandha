@@ -23,6 +23,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.dhandha.R
+import com.example.dhandha.botttomsheet.ServiceBottomSheet
 import com.example.dhandha.servicecontainer.ServiceCellViewModel
 import com.example.dhandha.services.Service
 
@@ -50,10 +53,14 @@ fun ServiceCell(viewModel: ServiceCellViewModel, onClick: (type: Service)-> Unit
     Box(contentAlignment = Alignment.Center,modifier = Modifier
         .height(130.dp)
         .clip(RoundedCornerShape(8.dp))
-        .background(brush =  Brush.verticalGradient(listOf(viewModel.color, Color.Black))).clickable {
-            onClick(viewModel.type)
+        .background(brush = Brush.verticalGradient(listOf(viewModel.color, Color.Black)))
+        .clickable {
+            onClick?.let {
+                    onClick(viewModel.type)
+            }
         }
     ) {
         Icon(modifier = Modifier.size(100.dp),painter = painterResource(id = viewModel.imageId), contentDescription = "", tint = Color.White)
+
     }
 }

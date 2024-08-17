@@ -15,10 +15,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.dhandha.authentication.AuthenticationActivity
 import com.example.dhandha.botttomsheet.ActionBottomSheet
 import com.example.dhandha.mainapp.MainAppActivity
+import com.example.dhandha.services.coaching.CoachingActivity
+import com.example.dhandha.services.coaching.detail.CoachingUserDetailAcitivty
 import com.example.dhandha.services.gym.GymActivity
 import com.example.dhandha.services.rent.RentActivity
 import com.example.dhandha.services.rent.create.CreateTenantActivity
-import com.example.dhandha.services.rent.dashboard.RentDashboardActivity
+import com.example.dhandha.services.dashboard.RentDashboardActivity
+import com.example.dhandha.services.gym.detail.GymUserDetailActivity
+import com.example.dhandha.services.library.LibraryActivity
+import com.example.dhandha.services.library.detail.LibraryUserDetailActivity
 import com.example.dhandha.services.rent.detail.RentDetailActivity
 import com.example.dhandha.ui.theme.AppTheme
 
@@ -71,6 +76,28 @@ private fun Routing(navController: NavHostController) {
         composable(Screen.Gym.routeId) {
             GymActivity(navController = navController)
         }
+        
+        composable(Screen.GymUserDetail.routeId) {
+            GymUserDetailActivity(navController = navController)
+        }
+
+        composable(Screen.Library.routeId) {
+            LibraryActivity(navController = navController)
+        }
+
+        composable(Screen.LibraryUserDetail.routeId) {
+            LibraryUserDetailActivity()
+        }
+
+        composable(Screen.Coaching.routeId) {
+            CoachingActivity(navController = navController)
+        }
+
+        composable(Screen.CoachingUserDetail.routeId) {
+            CoachingUserDetailAcitivty()
+        }
+
+
     }
 }
 
@@ -85,8 +112,15 @@ sealed class Screen(val routeId: String) {
     object CreateTenant: Screen(routeId = "createTenant")
     object RentDashbaord: Screen(routeId = "rentDashboard")
     object Coaching: Screen("coaching")
+    object CoachingUserDetail: Screen("coachingUserDetail")
+    object CreateCoachingUser: Screen("createCoachingUser")
     object Gym: Screen("gym")
+    object CreateGymUser: Screen(routeId = "createGymUser")
+    object GymUserDetail: Screen(routeId = "gymUserDetail")
     object Library: Screen("library")
+    object LibraryUserDetail: Screen("libraryUserDetail")
+    object CreateLibraryUser: Screen(routeId = "createLibraryUser")
+
 }
 
 

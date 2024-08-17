@@ -42,6 +42,7 @@ import com.example.dhandha.R
 import com.example.dhandha.Screen
 import com.example.dhandha.header.GeneralHeader
 import com.example.dhandha.header.SimpleHeader
+import com.example.dhandha.services.gym.GymUserListCell
 import com.example.dhandha.ui.theme.AppTheme
 
 @Composable
@@ -110,15 +111,15 @@ fun SearchView() {
 }
 
 @Composable
-fun RentUserContainer(navController: NavController) {
+private fun RentUserContainer(navController: NavController) {
     Card(modifier = Modifier
 
         .fillMaxWidth(1f)
-        , colors = CardDefaults.cardColors( AppTheme.colorScheme.background)) {
+    , colors = CardDefaults.cardColors( AppTheme.colorScheme.background)) {
 
         LazyColumn (verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(top = 6.dp)){
             items(listOf(1,1,1,1,1,1,1,1,1,1,1,1,1,1)) {
-                UserListCell() {
+                UserListCell {
                     navController.navigate(Screen.RentDetail.routeId)
                 }
             }

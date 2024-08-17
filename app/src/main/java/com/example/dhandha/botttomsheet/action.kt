@@ -38,7 +38,7 @@ fun ActionBottomSheet(onDismiss: () -> Unit) {
 
 
 @Composable
-fun BottomSheetContainer() {
+private fun BottomSheetContainer() {
     Box(modifier = Modifier
         .padding(20.dp)
         .fillMaxWidth()) {
