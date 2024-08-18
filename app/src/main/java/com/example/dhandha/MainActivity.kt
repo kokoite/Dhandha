@@ -42,8 +42,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-
 @Composable
 private fun Routing(navController: NavHostController) {
 

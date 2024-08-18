@@ -52,8 +52,8 @@ fun GymActivity(navController: NavController) {
                 .background(Color.Black)) {
                 Icon(
                     painterResource(id = R.drawable.dumbbell_fill), contentDescription = "", tint = Color.White, modifier = Modifier
-                        .height(20.dp)
-                        .width(20.dp)
+                        .height(30.dp)
+                        .width(30.dp)
                         .clickable {
                             navController.navigate(Screen.CreateTenant.routeId)
                         })
