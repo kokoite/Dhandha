@@ -8,27 +8,31 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.dhandha.authentication.AuthenticationActivity
-import com.example.dhandha.botttomsheet.ActionBottomSheet
-import com.example.dhandha.mainapp.MainAppActivity
-import com.example.dhandha.services.coaching.CoachingActivity
-import com.example.dhandha.services.coaching.detail.CoachingUserDetailAcitivty
-import com.example.dhandha.services.gym.GymActivity
-import com.example.dhandha.services.rent.RentActivity
-import com.example.dhandha.services.rent.create.CreateTenantActivity
-import com.example.dhandha.services.dashboard.RentDashboardActivity
-import com.example.dhandha.services.gym.detail.GymUserDetailActivity
-import com.example.dhandha.services.library.LibraryActivity
-import com.example.dhandha.services.library.detail.LibraryUserDetailActivity
+import com.example.dhandha.ui.authentication.AuthenticationActivity
+import com.example.dhandha.ui.mainapp.MainAppActivity
+import com.example.dhandha.ui.coaching.CoachingActivity
+import com.example.dhandha.ui.coaching.detail.CoachingUserDetailAcitivty
+import com.example.dhandha.ui.gym.GymActivity
+import com.example.dhandha.ui.rent.ui.RentScreen
+import com.example.dhandha.ui.rent.ui.create.CreateTenantScreen
+import com.example.dhandha.ui.dashboard.RentDashboardActivity
+import com.example.dhandha.ui.gym.detail.GymUserDetailActivity
+import com.example.dhandha.ui.library.LibraryActivity
+import com.example.dhandha.ui.library.detail.LibraryUserDetailActivity
 import com.example.dhandha.services.rent.detail.RentDetailActivity
+import com.example.dhandha.ui.rent.viewmodel.RentViewModel
 import com.example.dhandha.ui.theme.AppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -45,7 +49,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun Routing(navController: NavHostController) {
 
-    NavHost(navController = navController, startDestination = Screen.MainApp.routeId) {
+    NavHost(navController = navController, startDestination = Screen.CreateTenant.routeId) {
 
         composable(Screen.Authentication.routeId) {
             AuthenticationActivity(navController)
@@ -56,7 +60,8 @@ private fun Routing(navController: NavHostController) {
         }
 
         composable(Screen.Rent.routeId) {
-            RentActivity(navController = navController)
+            val viewModel: RentViewModel = hiltViewModel()
+            RentScreen(navController = navController, viewModel)
         }
 
         composable(Screen.RentDetail.routeId) {
@@ -64,7 +69,7 @@ private fun Routing(navController: NavHostController) {
         }
 
         composable(Screen.CreateTenant.routeId) {
-            CreateTenantActivity()
+            CreateTenantScreen()
         }
 
         composable(Screen.RentDashbaord.routeId) {
