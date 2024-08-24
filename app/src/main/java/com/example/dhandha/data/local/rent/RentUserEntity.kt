@@ -11,6 +11,7 @@ data class RentUserEntity(
     val name: String,
     val phone: String,
     val address: String,
+    val image: String?,
     val isActive: Boolean,
     val agreementStartDate: Long,
     val agreementEndDate: Long,
@@ -20,5 +21,6 @@ data class RentUserEntity(
     val rentAmount: Int,
     val advanceAmountPaid: Int,
     val securityAmountPaid: Int,
-    val pendingAmount: Int
+    val pendingAmount: Int,
+    val amountPaid: Int
 )

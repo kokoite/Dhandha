@@ -34,12 +34,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.dhandha.ui.botttomsheet.ActionBottomSheet
 import com.example.dhandha.ui.customviews.Carousel
+import com.example.dhandha.ui.rent.viewmodel.RentViewModel
 import com.example.dhandha.ui.theme.AppTheme
 
 
 
 @Composable
-fun RentDetailActivity(navController: NavController) {
+fun RentDetailActivity(navController: NavController, viewModel: RentViewModel) {
     val editButtonClicked = remember { mutableStateOf(false) }
     Scaffold(
         floatingActionButton = {

@@ -2,6 +2,7 @@ package com.example.dhandha.ui.rent.ui.create
 
 import CustomTextField
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -32,12 +33,15 @@ import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,14 +50,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
+import com.example.dhandha.NavControllerCompositionLocal
 import com.example.dhandha.R
+import com.example.dhandha.data.models.CreateRentUser
+import com.example.dhandha.helper.convertLongDateToString
+import com.example.dhandha.helper.getTodayDate
 import com.example.dhandha.ui.header.GeneralHeader
+import com.example.dhandha.ui.rent.viewmodel.RentViewModel
+import com.example.dhandha.ui.state.UiState
 import com.example.dhandha.ui.theme.AppTheme
-import java.text.SimpleDateFormat
-import java.util.Calendar
+import kotlinx.coroutines.launch
+import java.util.UUID
 
 @Composable
-fun CreateTenantScreen() {
+fun CreateTenantScreen(navController: NavController, viewModel: RentViewModel) {
     val interactionSource = remember {
         MutableInteractionSource()
     }
@@ -68,14 +80,59 @@ fun CreateTenantScreen() {
             .padding(20.dp)
             .verticalScroll(ScrollState(0)), verticalArrangement = Arrangement.spacedBy(30.dp)) {
             GeneralHeader("Lets Add Tenants !!", painter = painterResource(id = R.drawable.house_fill))
-            CreateUserContainer()
+            CreateUserContainer(viewModel)
             Spacer(modifier = Modifier.height(0.dp))
         }
     }
 }
 
 @Composable
-fun CreateUserContainer() {
+fun CreateUserContainer(viewModel: RentViewModel) {
+    val todayDate = getTodayDate()
+    val controller = NavControllerCompositionLocal.current
+    val scope = rememberCoroutineScope()
+    val selectedImageUri = remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val nameState = remember {
+        mutableStateOf("")
+    }
+
+    val phoneState = remember {
+        mutableStateOf("")
+    }
+    val addressState = remember {
+        mutableStateOf("")
+    }
+    val rentState = remember {
+        mutableStateOf("")
+    }
+    val pendingState = remember {
+        mutableStateOf("")
+    }
+    val agreementStartState = remember {
+        mutableStateOf(todayDate)
+    }
+
+    val agreementEndState = remember {
+        mutableStateOf(todayDate)
+    }
+    val advanceState = remember {
+        mutableStateOf("")
+    }
+    val securityState = remember {
+        mutableStateOf("")
+    }
+    val rentStartState = remember {
+        mutableStateOf(todayDate)
+    }
+    val rentEndState = remember {
+        mutableStateOf(todayDate)
+    }
+    val lastPaymentAmountState = remember {
+        mutableStateOf("")
+    }
+
     Box(modifier = Modifier
         .imePadding()
         .fillMaxWidth()
@@ -84,238 +141,176 @@ fun CreateUserContainer() {
         Column(modifier = Modifier
             .padding(20.dp)
             .fillMaxSize(), verticalArrangement = Arrangement.spacedBy(20.dp), horizontalAlignment = Alignment.CenterHorizontally){
+            CameraContainer(selectedImageUri)
+            val nameData = FormInputContainer("Name","e.g. Pranjal", nameState)
+            createFormInputContainer(data = listOf(nameData))
 
-            CameraContainer()
-            Spacer(modifier = Modifier.height(40.dp))
-            NameContainer()
-            PhoneContainer()
-            AddressContainer()
-            AdvanceAndSecurityContainer()
-            RentAndUtilityContainer()
-            AgreementStartAndEndContainer()
+            val phoneData = FormInputContainer("Phone","e.g.8209131942", phoneState)
+            createFormInputContainer(data = listOf(phoneData))
+            val addressData = FormInputContainer("Address","e.g. Manas hospital", addressState)
+            createFormInputContainer(data = listOf(addressData))
+            val advanceData = FormInputContainer("Advance amount","e.g. 20000", advanceState)
+            val securityData = FormInputContainer("Security Amount", "e.g. 20000", securityState)
+            createFormInputContainer(data = listOf(advanceData, securityData))
+            val paidAmount = FormInputContainer("Paid amount","e.g. 20000", lastPaymentAmountState)
+            createFormInputContainer(data = listOf(paidAmount))
+            val rentData = FormInputContainer("Rent amount","e.g. 20000", rentState)
+            val pendingData = FormInputContainer("Pending Amount", "e.g. 20000", pendingState)
+            createFormInputContainer(data = listOf(rentData, pendingData))
+            
+            val agreementStartData = FormDateInputContainer("Agreement Start Date", agreementStartState)
+            val agreementEndData = FormDateInputContainer("Agreement End Date", agreementEndState)
+            createFormDateInputContainer(data = listOf(agreementStartData, agreementEndData))
+
+            val rentStartData = FormDateInputContainer("Rent Start date", rentStartState)
+            val rentEndData = FormDateInputContainer("Rent End Date", rentEndState)
+            createFormDateInputContainer(data = listOf(rentStartData, rentEndData))
+
             PropertyImageButton()
-            CreateButton()
+            CreateButton {
+                val name = nameState.value
+                val phone = phoneState.value
+                val address = addressState.value
+                val imageUri = selectedImageUri.value
+                val rent = rentState.value
+                val pending = pendingState.value
+                val rentStart = rentStartState.value
+                val rentEnd = rentEndState.value
+                val agreementStart = agreementStartState.value
+                val agreementEnd = agreementEndState.value
+                val lastPaymentAmount = lastPaymentAmountState.value
+                val advance = advanceState.value
+                val security = securityState.value
+                val user = CreateRentUser(
+                    id = UUID.randomUUID(),
+                    name = name,
+                    phone = phone,
+                    address = address,
+                    image = imageUri.toString(),
+                    advance = advance,
+                    agreementEnd = agreementEnd,
+                    agreementStart = agreementStart,
+                    pending = pending,
+                    rent = rent,
+                    rentEnd = rentEnd,
+                    rentStart = rentStart,
+                    security = security,
+                    lastPaymentDate= todayDate,
+                    paidAmount = lastPaymentAmount,
+                    joinedDate = todayDate
+                )
+                viewModel.insertUser(user)
+                scope.launch {
+                    viewModel._uiState.collect {
+                        handleResponse(it, controller)
+                    }
+                }
+            }
             Spacer(modifier = Modifier.height(0.dp))
         }
     }
 }
 
-@Composable
-fun CameraContainer() {
 
+private fun handleResponse(uiState: UiState<Boolean>, navController: NavController) {
+    when (uiState) {
+        is UiState.Loading -> {
+            Log.d("TAG", "CreateUserContainer: loading")
+        }
 
-    val selectedImageUri = remember {
-        mutableStateOf<Uri?>(null)
+        is UiState.Success -> {
+            Log.d("TAG", "CreateUserContainer: succeess")
+            navController.popBackStack()
+        }
+
+        is UiState.Error -> {
+            Log.d("TAG", "CreateUserContainer: error")
+        }
     }
+}
 
+@Composable
+fun CameraContainer(selectedImageUri: MutableState<Uri?>) {
     val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
         uri: Uri? ->
-        selectedImageUri?.value = uri
+        uri?.let {
+            selectedImageUri?.value = uri
+        }
     }
+    val imageModifier = remember {
+        mutableStateOf(
+            Modifier
+                .height(200.dp)
+                .width(200.dp)
+        )
+    }
+
     Row(modifier = Modifier
         .fillMaxWidth(1f)
         .clickable {
             galleryLauncher.launch("image/*")
         }, horizontalArrangement = Arrangement.Center) {
-        Image(imageVector = Icons.Default.AddAPhoto, contentDescription = "", modifier = Modifier
-            .height(100.dp)
-            .width(100.dp)
-            .scale(scaleX = -1f, scaleY = 1f))
-    }
 
-}
-
-
-@Composable
-fun NameContainer() {
-    val text = remember { mutableStateOf("") }
-    Column (verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Text(text = "Name", style = AppTheme.typography.placeholder)
-        CustomTextField(textState = text, placeholderText = "e.g. Pranjal Agarwal", modifier = Modifier.fillMaxWidth())
-        Spacer(modifier = Modifier
-            .height(1.dp)
-            .fillMaxWidth()
-            .background(Color.LightGray))
-    }
-}
-
-@Composable
-fun PhoneContainer() {
-    val text = remember { mutableStateOf("") }
-    Column (verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Text(text = "Phone", style = AppTheme.typography.placeholder)
-        CustomTextField(textState = text, placeholderText = "e.g. 8209131942", modifier = Modifier.fillMaxWidth())
-        Spacer(modifier = Modifier
-            .height(1.dp)
-            .fillMaxWidth()
-            .background(Color.LightGray))
-    }
-}
-
-@Composable
-fun AddressContainer() {
-    val text = remember { mutableStateOf("") }
-    Column (verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Text(text = "Address", style = AppTheme.typography.placeholder)
-        CustomTextField(textState = text, placeholderText = "e.g. Manas hospital", modifier = Modifier.fillMaxWidth())
-        Spacer(modifier = Modifier
-            .height(1.dp)
-            .fillMaxWidth()
-            .background(Color.LightGray))
-    }
-}
-
-
-@Composable
-fun AdvanceAndSecurityContainer() {
-    val text1 = remember { mutableStateOf("") }
-    val text2 = remember { mutableStateOf("") }
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(text = "Advance Amount", style = AppTheme.typography.placeholder)
-            CustomTextField(
-                textState = text1,
-                placeholderText = "e.g. 5000",
-
-                modifier = Modifier.fillMaxWidth()
+        if(selectedImageUri.value?.toString().isNullOrEmpty()) {
+            Image(imageVector = Icons.Default.AddAPhoto, contentDescription = "",
+                modifier = imageModifier.value
+                    .scale(scaleX = -0.5f, scaleY = 0.5f)
             )
-            Spacer(modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(Color.LightGray))
-        }
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(text = "Security Amount", style = AppTheme.typography.placeholder)
-            CustomTextField(
-                textState = text2,
-                placeholderText = "e.g. 5000",
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(Color.LightGray))
+        } else {
+            Log.d("TAG", "CameraContainer: ")
+            Image(painter = rememberImagePainter(data = selectedImageUri.value), contentDescription = "", imageModifier.value)
         }
     }
 }
 
 @Composable
-fun RentAndUtilityContainer() {
-    val text1 = remember { mutableStateOf("") }
-    val text2 = remember { mutableStateOf("") }
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp)){
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(text = "Rent Amount", style = AppTheme.typography.placeholder)
-            CustomTextField(
-                textState = text1,
-                placeholderText = "e.g. 20000",
-
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(Color.LightGray))
-        }
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(text = "Utility Amount", style = AppTheme.typography.placeholder)
-            CustomTextField(
-                textState = text2,
-                placeholderText = "e.g. 2000",
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(Color.LightGray))
+private fun createFormInputContainer(data: List<FormInputContainer>) {
+    Row(modifier = Modifier.fillMaxWidth(),  horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+        for (item in data) {
+            Column (verticalArrangement = Arrangement.spacedBy(2.dp), modifier = Modifier.weight(1f)) {
+                Text(text = item.labelText, style = AppTheme.typography.placeholder)
+                CustomTextField(textState = item.state, placeholderText = item.placeholderText, modifier = Modifier.fillMaxWidth())
+                Spacer(modifier = Modifier
+                    .height(1.dp)
+                    .fillMaxWidth()
+                    .background(Color.LightGray))
+            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AgreementStartAndEndContainer() {
+private fun createFormDateInputContainer(data: List<FormDateInputContainer>) {
     val shouldShow = remember { mutableStateOf(false) }
     val dateState = rememberDatePickerState()
-    val state1 = remember { mutableStateOf("") }
-    val state2 = remember { mutableStateOf("") }
-    val startOrEndSelected = remember {
-        // Here true indicates start selected
-        mutableStateOf(true)
+    val selectedContainer = remember {
+        mutableStateOf(0)
     }
-
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp)){
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(text = "Agreement Start date", style = AppTheme.typography.placeholder)
-            CustomTextField(
-                isEditable = false,
-                textState = state1,
-                placeholderText = "e.g. 2000",
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+        data.withIndex().forEach { (index, item)->
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .clickable {
                         shouldShow.value = true
-                        startOrEndSelected.value = true
+                        selectedContainer.value = index
                     }
-            )
-            Spacer(modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(Color.LightGray))
-
-        }
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-            modifier = Modifier.weight(1f)
-        ) {
-            Text(text = "Agreement end date", style = AppTheme.typography.placeholder)
-            CustomTextField(
-                isEditable = false,
-                textState = state2,
-                placeholderText = "e.g. 2000",
-                modifier = Modifier
+            ) {
+                Text(text = item.labelText, style = AppTheme.typography.placeholder)
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(text = item.state.value, style = MaterialTheme.typography.bodyMedium)
+                Spacer(modifier = Modifier
+                    .height(1.dp)
                     .fillMaxWidth()
-                    .clickable {
-                        shouldShow.value = true
-                        startOrEndSelected.value = false
-                    }
-            )
-            Spacer(modifier = Modifier
-                .height(1.dp)
-                .fillMaxWidth()
-                .background(Color.LightGray))
+                    .background(Color.LightGray))
+            }
         }
     }
-
     if(shouldShow.value) {
-        if(startOrEndSelected.value) {
-            showDatePicker(dateState, shouldShow, state1)
-        } else {
-            showDatePicker(dateState, shouldShow, state2)
-        }
-
-
+        showDatePicker(state = dateState, shouldShow = shouldShow, textState = data[selectedContainer.value].state)
     }
-
 }
 
 @Composable
@@ -330,8 +325,8 @@ fun PropertyImageButton() {
 }
 
 @Composable
-fun CreateButton() {
-    Button(onClick = { /*TODO*/ }, contentPadding = PaddingValues(horizontal = 30.dp, vertical = 3.dp), modifier = Modifier
+fun CreateButton(onClick: () -> Unit) {
+    Button(onClick = { onClick() }, contentPadding = PaddingValues(horizontal = 30.dp, vertical = 3.dp), modifier = Modifier
         .clip(
             RoundedCornerShape(25.dp)
         )
@@ -348,16 +343,12 @@ private fun showDatePicker(state: DatePickerState, shouldShow: MutableState<Bool
             shouldShow.value = false
         },
         confirmButton = {
-            Text(text = "Confirm", Modifier.clickable {
-                state.selectedDateMillis?.let {
-                    val calendar = Calendar.getInstance()
-                    calendar.timeInMillis = it
-                    val formatter = SimpleDateFormat("dd-MM-yyyy")
-                    val date = formatter.format(calendar)
-                    textState.value = date
-                }
+            TextButton(onClick = {
+                textState.value = convertLongDateToString(state.selectedDateMillis ?: 0)
                 shouldShow.value = false
-            })
+            }) {
+                Text(text = "Confirm")
+            }
         },
         colors = DatePickerDefaults.colors(Color.White),
     ) {
@@ -377,3 +368,14 @@ private fun showDatePicker(state: DatePickerState, shouldShow: MutableState<Bool
         ))
     }
 }
+
+data class FormInputContainer(
+    val labelText: String,
+    val placeholderText: String,
+    val state: MutableState<String>
+)
+
+data class FormDateInputContainer(
+    val labelText: String,
+    val state: MutableState<String>
+)

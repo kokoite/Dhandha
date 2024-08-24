@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,9 +32,14 @@ import com.example.dhandha.ui.rent.viewmodel.RentViewModel
 import com.example.dhandha.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+val NavControllerCompositionLocal = compositionLocalOf<NavController> {
+    error("Controller not provided")
+}
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +47,9 @@ class MainActivity : ComponentActivity() {
             AppTheme {
                 Surface(modifier = Modifier.fillMaxSize(1f),color = MaterialTheme.colorScheme.background) {
                     val controller = rememberNavController()
-                    Routing(navController = controller)
+                    CompositionLocalProvider(NavControllerCompositionLocal provides controller) {
+                        Routing(navController = controller)
+                    }
                 }
             }
         }
@@ -49,7 +59,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun Routing(navController: NavHostController) {
 
-    NavHost(navController = navController, startDestination = Screen.CreateTenant.routeId) {
+    val rentViewModel: RentViewModel = hiltViewModel()
+
+    NavHost(navController = navController, startDestination = Screen.Rent.routeId) {
 
         composable(Screen.Authentication.routeId) {
             AuthenticationActivity(navController)
@@ -60,16 +72,16 @@ private fun Routing(navController: NavHostController) {
         }
 
         composable(Screen.Rent.routeId) {
-            val viewModel: RentViewModel = hiltViewModel()
-            RentScreen(navController = navController, viewModel)
+
+            RentScreen(navController = navController, rentViewModel)
         }
 
         composable(Screen.RentDetail.routeId) {
-            RentDetailActivity(navController = navController)
+            RentDetailActivity(navController = navController, rentViewModel)
         }
 
         composable(Screen.CreateTenant.routeId) {
-            CreateTenantScreen()
+            CreateTenantScreen(navController, rentViewModel)
         }
 
         composable(Screen.RentDashbaord.routeId) {
