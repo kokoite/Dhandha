@@ -1,5 +1,6 @@
 package com.example.dhandha.data.local.rent
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -8,7 +9,7 @@ import androidx.room.Query
 interface RentUserDao {
 
     @Query("SELECT * from rent_user")
-    suspend fun fetchAllUsers(): List<RentUserEntity>
+    fun fetchAllUsers(): PagingSource<Int, RentUserEntity>
 
 
     @Insert

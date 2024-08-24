@@ -6,9 +6,9 @@ import com.example.dhandha.helper.convertStringDateToLong
 import com.example.dhandha.helper.getTodayDate
 import java.util.UUID
 
-data class RentUserListCell(val name: String, val phone: String,
+data class RentUserListCell(val id: UUID, val name: String, val phone: String,
                             val pendingAmount: Int, val rentAmount: Int,
-                            val expiryDate: String)
+                            val expiryDate: String, val image: String?)
 
 data class RentUser (val name: String, val phone: String,
                      val pendingAmount: String, val rentAmount: String,

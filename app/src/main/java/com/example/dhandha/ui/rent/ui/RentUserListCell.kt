@@ -1,5 +1,7 @@
 package com.example.dhandha.ui.rent.ui
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,11 +26,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
 import com.example.dhandha.R
+import com.example.dhandha.data.models.RentUserListCell
 import com.example.dhandha.ui.theme.AppTheme
 
 @Composable
-fun UserListCell(onClick: () -> Unit) {
+fun RentUserListCell(user: RentUserListCell, onClick: () -> Unit) {
+    Log.d(TAG, "RentUserListCell: ${user.image}")
     val interactionSource = remember { MutableInteractionSource() }
     Box(
         modifier = Modifier
@@ -42,65 +48,67 @@ fun UserListCell(onClick: () -> Unit) {
         Row(modifier = Modifier
             .padding(12.dp)
             .fillMaxWidth(1f), verticalAlignment = Alignment.CenterVertically) {
-           Image(painter = painterResource(id = R.drawable.happy_face), contentDescription = "", modifier = Modifier
+           Image(painter = rememberImagePainter(data = Uri.parse(user.image ?: "")), contentDescription = "", modifier = Modifier
                .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
                .height(110.dp)
                .width(100.dp)
                .background(
                    Color.Yellow
                ), contentScale = ContentScale.FillBounds)
+
+
             Spacer(modifier = Modifier.width(20.dp))
-            UserDetailContainer(Modifier.weight(1f))
+            UserDetailContainer(user, Modifier.weight(1f))
         }
     }
 }
 
 @Composable
-private fun UserDetailContainer(modifier: Modifier) {
+private fun UserDetailContainer(user: RentUserListCell, modifier: Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        NamePhoneContainer(Modifier.fillMaxWidth())
-        LastPaymentDateAndAmountContainer(Modifier.fillMaxWidth())
-        CurrentPaymentDateAndAmountContainer(Modifier.fillMaxWidth())
+        NamePhoneContainer(user,Modifier.fillMaxWidth())
+        LastPaymentDateAndAmountContainer(user, Modifier.fillMaxWidth())
+        CurrentPaymentDateAndAmountContainer(user, Modifier.fillMaxWidth())
     }
 }
 
 @Composable
-private fun NamePhoneContainer(modifier: Modifier) {
+private fun NamePhoneContainer(user: RentUserListCell, modifier: Modifier) {
     Row(modifier = modifier) {
 
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
            Text(text = "Name", style = AppTheme.typography.placeholder)
-           Text(text = "Pranjal", style = AppTheme.typography.label)
+           Text(text = user.name, style = AppTheme.typography.label)
         }
 
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(text = "Phone", style = AppTheme.typography.placeholder)
-            Text(text = "8219376455", style = AppTheme.typography.label)
+            Text(text = user.phone, style = AppTheme.typography.label)
         }
     }
 }
 
 @Composable
-private fun LastPaymentDateAndAmountContainer(modifier: Modifier) {
+private fun LastPaymentDateAndAmountContainer(user: RentUserListCell, modifier: Modifier) {
     Row(modifier) {
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(text = "Pending ", style = AppTheme.typography.placeholder)
-            Text(text = "2000", style = AppTheme.typography.label)
+            Text(text = user.pendingAmount.toString(), style = AppTheme.typography.label)
         }
 
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(text = "Rent Amount", style = AppTheme.typography.placeholder)
-            Text(text = "20000", style = AppTheme.typography.label)
+            Text(text = user.rentAmount.toString(), style = AppTheme.typography.label)
         }
     }
 }
 
 @Composable
-private fun CurrentPaymentDateAndAmountContainer(modifier: Modifier) {
+private fun CurrentPaymentDateAndAmountContainer(user: RentUserListCell, modifier: Modifier) {
     Row(modifier) {
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(text = "Current payment Date", style = AppTheme.typography.placeholder)
-            Text(text = "20-07-2024", style = AppTheme.typography.label)
+            Text(text = user.expiryDate, style = AppTheme.typography.label)
         }
     }
 }

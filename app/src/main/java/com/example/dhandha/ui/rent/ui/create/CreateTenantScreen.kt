@@ -57,6 +57,7 @@ import com.example.dhandha.R
 import com.example.dhandha.data.models.CreateRentUser
 import com.example.dhandha.helper.convertLongDateToString
 import com.example.dhandha.helper.getTodayDate
+import com.example.dhandha.helper.showDatePicker
 import com.example.dhandha.ui.header.GeneralHeader
 import com.example.dhandha.ui.rent.viewmodel.RentViewModel
 import com.example.dhandha.ui.state.UiState
@@ -332,40 +333,6 @@ fun CreateButton(onClick: () -> Unit) {
         )
         .background(Color.Black), colors = ButtonDefaults.buttonColors(containerColor = Color.Black)) {
         Text("Add user", style = AppTheme.typography.buttonText)
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun showDatePicker(state: DatePickerState, shouldShow: MutableState<Boolean>, textState: MutableState<String>) {
-    DatePickerDialog(
-        onDismissRequest = {
-            shouldShow.value = false
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                textState.value = convertLongDateToString(state.selectedDateMillis ?: 0)
-                shouldShow.value = false
-            }) {
-                Text(text = "Confirm")
-            }
-        },
-        colors = DatePickerDefaults.colors(Color.White),
-    ) {
-        DatePicker(state = state, title = null, headline = null, showModeToggle = false, colors = DatePickerDefaults.colors(
-
-            containerColor = Color.White,
-            dayContentColor = Color.Black,
-            selectedDayContainerColor = Color.Black,
-            selectedDayContentColor = Color.White,
-            weekdayContentColor = Color.Black,
-            todayDateBorderColor = Color.Black,
-            todayContentColor = Color.Black,
-            yearContentColor = Color.Black,
-            currentYearContentColor = Color.Black,
-            selectedYearContentColor = Color.White,
-            selectedYearContainerColor = Color.Black
-        ))
     }
 }
 

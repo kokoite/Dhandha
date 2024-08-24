@@ -1,18 +1,22 @@
 package com.example.dhandha.data.repository
 
+
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import androidx.room.withTransaction
 import com.example.dhandha.data.local.db.DhandhaDatabase
-import com.example.dhandha.data.local.library.LibraryUserDao
 import com.example.dhandha.data.local.rent.RentUserEntity
-import com.example.dhandha.data.models.CreateRentUser
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.dhandha.data.models.RentUserListCell
+import com.example.dhandha.helper.convertLongDateToString
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 
 interface RentUserRepository {
-    fun getAllUsers()
+    suspend fun getAllUsers(): Flow<PagingData<RentUserListCell>>
     suspend fun createUser(user: RentUserEntity)
     fun editUser()
     fun deleteUser()
@@ -20,13 +24,37 @@ interface RentUserRepository {
 
 class RentUserRepositoryImpl @Inject constructor(private val db: DhandhaDatabase) : RentUserRepository {
 
-    override fun getAllUsers() {
+    private val dao = db.rentUserDao()
 
+    override suspend fun getAllUsers(): Flow<PagingData<RentUserListCell>> {
+        return  Pager(
+            config = PagingConfig(
+                pageSize = 3,
+                enablePlaceholders = false
+            ),
+
+            pagingSourceFactory = {
+                dao.fetchAllUsers()
+            }
+        ).flow.map {
+            it.map {item ->
+                RentUserListCell(
+                    id = item.id,
+                    pendingAmount = item.pendingAmount,
+                    name = item.name,
+                    rentAmount = item.rentAmount,
+                    phone = item.phone,
+                    expiryDate = convertLongDateToString(item.rentExpiryDate),
+                    image = item.image
+                )
+            }
+        }
     }
 
     override suspend fun createUser(user: RentUserEntity) {
-        val dao = db.rentUserDao()
-        dao.insertUser(user)
+        db.withTransaction {
+            dao.insertUser(user)
+        }
     }
 
     override fun editUser() {
