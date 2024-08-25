@@ -16,13 +16,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,10 +36,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.paging.LoadState
 import com.example.dhandha.NavControllerCompositionLocal
 import com.example.dhandha.R
 import com.example.dhandha.Screen
@@ -85,7 +93,7 @@ fun RentScreen(navController: NavController, viewModel: RentViewModel) {
             }) {
             Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(30.dp)) {
 
-                HeaderWithSearch(navController)
+                HeaderWithSearch(navController, viewModel)
                 RentUserContainer(viewModel)
             }
         }
@@ -94,19 +102,20 @@ fun RentScreen(navController: NavController, viewModel: RentViewModel) {
 }
 
 @Composable
-private fun HeaderWithSearch(navController: NavController) {
+private fun HeaderWithSearch(navController: NavController, viewModel: RentViewModel) {
     Column {
         SimpleHeader(title = "Welcome back Pranjal!!", painterResource(id = R.drawable.happy_face), action = {
             navController.navigate(route = Screen.RentDashbaord.routeId)
         })
         Spacer(modifier = Modifier.height(20.dp))
-        SearchView()
+        SearchView(viewModel)
     }
 }
 
 @Composable
-private fun SearchView() {
+private fun SearchView(viewModel: RentViewModel) {
     val text = remember { mutableStateOf("") }
+
     Box(modifier = Modifier
         .clip(RoundedCornerShape(12.dp))
         .fillMaxWidth(1f)
@@ -115,7 +124,10 @@ private fun SearchView() {
             .padding(vertical = 8.dp)
             .clip(
                 RoundedCornerShape(12.dp)
-            ))
+            )) {
+            viewModel.updateSearchQuery(text.value)
+            viewModel.fetchAllUsers()
+        }
     }
 }
 
@@ -124,6 +136,8 @@ private fun RentUserContainer(viewModel: RentViewModel) {
 
     val navController = NavControllerCompositionLocal.current
     val uiState = viewModel.userListUiState.collectAsState()
+    val columnState = rememberLazyListState()
+
 
     Card(modifier = Modifier
         .fillMaxWidth(1f)
@@ -132,15 +146,20 @@ private fun RentUserContainer(viewModel: RentViewModel) {
 
         when(uiState.value) {
             is UiState.Loading -> {
-
-                Log.d(TAG, "RentUserContainer: Loading users")
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.7f), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(modifier = Modifier
+                        .height(40.dp)
+                        .width(40.dp),
+                        color = Color.Red
+                        )
+                }
             }
-
             is UiState.Success -> {
-                Log.d(TAG, "RentUserContainer: Success")
                 val response = (uiState.value as UiState.Success).response.collectAsLazyPagingItems()
-                Log.d(TAG, "RentUserContainer: ${response.itemCount}")
-                LazyColumn (verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(top = 6.dp)){
+                Log.d(TAG, "RentUserContainer: Success ${response.itemCount}")
+                LazyColumn (state = columnState, verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(top = 6.dp)){
                     items(count = response.itemCount, key = response.itemKey { it.id }, contentType = response.itemContentType { "content-type"}) {
                         val data = response[it]
                         data?.let {
@@ -148,12 +167,16 @@ private fun RentUserContainer(viewModel: RentViewModel) {
                                 navController.navigate(Screen.RentDetail.routeId)
                             }
                         }
-
                     }
                 }
             }
-
             is UiState.Error -> {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)) {
+
+                    Text(text = "Oops somthing went wrong. Please retry", textAlign = TextAlign.Center)
+                }
                 Log.d(TAG, "RentUserContainer: Error")
             }
         }

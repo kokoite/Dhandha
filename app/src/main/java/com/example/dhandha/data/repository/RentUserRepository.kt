@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 
 interface RentUserRepository {
-    suspend fun getAllUsers(): Flow<PagingData<RentUserListCell>>
+    suspend fun getAllUsers(searchQuery: String): Flow<PagingData<RentUserListCell>>
     suspend fun createUser(user: RentUserEntity)
     fun editUser()
     fun deleteUser()
@@ -26,15 +26,18 @@ class RentUserRepositoryImpl @Inject constructor(private val db: DhandhaDatabase
 
     private val dao = db.rentUserDao()
 
-    override suspend fun getAllUsers(): Flow<PagingData<RentUserListCell>> {
+    override suspend fun getAllUsers(searchQuery: String): Flow<PagingData<RentUserListCell>> {
         return  Pager(
             config = PagingConfig(
-                pageSize = 3,
-                enablePlaceholders = false
+                pageSize = 1000,
             ),
 
             pagingSourceFactory = {
-                dao.fetchAllUsers()
+                if(searchQuery.isEmpty()) {
+                    dao.fetchAllUsers()
+                } else {
+                    dao.searchUser(searchQuery)
+                }
             }
         ).flow.map {
             it.map {item ->

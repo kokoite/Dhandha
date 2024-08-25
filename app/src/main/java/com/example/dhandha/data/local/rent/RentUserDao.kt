@@ -15,4 +15,8 @@ interface RentUserDao {
     @Insert
     suspend fun insertUser(user: RentUserEntity)
 
+
+    @Query ("SELECT * from rent_user WHERE name LIKE '%' || :searchQuery || '%' OR phone LIKE '%' || :searchQuery || '%'")
+    fun searchUser(searchQuery: String): PagingSource<Int, RentUserEntity>
+
 }

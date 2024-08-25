@@ -1,6 +1,7 @@
 package com.example.dhandha.ui.rent.ui.create
 
 import CustomTextField
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -28,14 +29,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -47,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -55,7 +52,6 @@ import coil.compose.rememberImagePainter
 import com.example.dhandha.NavControllerCompositionLocal
 import com.example.dhandha.R
 import com.example.dhandha.data.models.CreateRentUser
-import com.example.dhandha.helper.convertLongDateToString
 import com.example.dhandha.helper.getTodayDate
 import com.example.dhandha.helper.showDatePicker
 import com.example.dhandha.ui.header.GeneralHeader
@@ -90,6 +86,18 @@ fun CreateTenantScreen(navController: NavController, viewModel: RentViewModel) {
 @Composable
 fun CreateUserContainer(viewModel: RentViewModel) {
     val todayDate = getTodayDate()
+    val context = LocalContext.current
+    val contentResolver = remember {
+        mutableStateOf(context.contentResolver)
+    }
+    val flags = remember {
+        mutableStateOf(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+
+    val takePermission = remember {
+        mutableStateOf(false)
+    }
+
     val controller = NavControllerCompositionLocal.current
     val scope = rememberCoroutineScope()
     val selectedImageUri = remember {
@@ -145,7 +153,6 @@ fun CreateUserContainer(viewModel: RentViewModel) {
             CameraContainer(selectedImageUri)
             val nameData = FormInputContainer("Name","e.g. Pranjal", nameState)
             createFormInputContainer(data = listOf(nameData))
-
             val phoneData = FormInputContainer("Phone","e.g.8209131942", phoneState)
             createFormInputContainer(data = listOf(phoneData))
             val addressData = FormInputContainer("Address","e.g. Manas hospital", addressState)
@@ -200,7 +207,9 @@ fun CreateUserContainer(viewModel: RentViewModel) {
                     paidAmount = lastPaymentAmount,
                     joinedDate = todayDate
                 )
+
                 viewModel.insertUser(user)
+                takePermission.value = true
                 scope.launch {
                     viewModel._uiState.collect {
                         handleResponse(it, controller)
@@ -208,6 +217,14 @@ fun CreateUserContainer(viewModel: RentViewModel) {
                 }
             }
             Spacer(modifier = Modifier.height(0.dp))
+        }
+
+        if (takePermission.value && selectedImageUri.value != null) {
+
+            selectedImageUri.value?.let {
+                contentResolver.value.takePersistableUriPermission(it, flags.value)
+            }
+            takePermission.value = false
         }
     }
 }

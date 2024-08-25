@@ -79,11 +79,15 @@ fun CustomTextField(
 }
 
 @Composable
-fun SearchTextField(textState: MutableState<String>, placeholderText: String, modifier: Modifier) {
+fun SearchTextField(textState: MutableState<String>, placeholderText: String, modifier: Modifier, onValueChanged: (()->Unit)? = null) {
     BasicTextField(
         value = textState.value,
         singleLine = true,
-        onValueChange = { textState.value = it },
+        onValueChange = {
+            textState.value = it
+            onValueChanged?.let {
+                onValueChanged()
+            } },
         textStyle = AppTheme.typography.label,
         modifier = modifier,
         decorationBox = { innerTextField ->
