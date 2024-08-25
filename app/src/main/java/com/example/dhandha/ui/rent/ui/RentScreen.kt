@@ -158,7 +158,7 @@ private fun RentUserContainer(viewModel: RentViewModel) {
             }
             is UiState.Success -> {
                 val response = (uiState.value as UiState.Success).response.collectAsLazyPagingItems()
-                Log.d(TAG, "RentUserContainer: Success ${response.itemCount}")
+                val loadState = response.loadState
                 LazyColumn (state = columnState, verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(top = 6.dp)){
                     items(count = response.itemCount, key = response.itemKey { it.id }, contentType = response.itemContentType { "content-type"}) {
                         val data = response[it]
@@ -168,13 +168,27 @@ private fun RentUserContainer(viewModel: RentViewModel) {
                             }
                         }
                     }
+
+                    if(loadState.append == LoadState.Loading) {
+                        item {
+                            Box(modifier = Modifier
+                                .fillMaxWidth()
+                                , contentAlignment = Alignment.Center) {
+                                CircularProgressIndicator(modifier = Modifier
+                                    .height(40.dp)
+                                    .width(40.dp),
+                                    color = Color.Red
+                                )
+                            }
+                        }
+                    }
                 }
+
             }
             is UiState.Error -> {
                 Box(modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White)) {
-
                     Text(text = "Oops somthing went wrong. Please retry", textAlign = TextAlign.Center)
                 }
                 Log.d(TAG, "RentUserContainer: Error")

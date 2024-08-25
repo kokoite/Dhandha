@@ -61,7 +61,7 @@ private fun Routing(navController: NavHostController) {
 
     val rentViewModel: RentViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = Screen.MainApp.routeId) {
+    NavHost(navController = navController, startDestination = Screen.Rent.routeId) {
 
         composable(Screen.Authentication.routeId) {
             AuthenticationActivity(navController)

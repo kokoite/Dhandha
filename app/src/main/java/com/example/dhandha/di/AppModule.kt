@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.RoomMasterTable
 import com.example.dhandha.data.local.db.DhandhaDatabase
+import com.example.dhandha.data.local.rent.RentUserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,4 +24,6 @@ object AppModule  {
     fun providesDb(@ApplicationContext application: Context): DhandhaDatabase {
         return Room.databaseBuilder(application, DhandhaDatabase::class.java, "dhandha_db").build()
     }
+
+
 }

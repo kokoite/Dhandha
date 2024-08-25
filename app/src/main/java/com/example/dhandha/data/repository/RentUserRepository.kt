@@ -9,6 +9,7 @@ import androidx.room.withTransaction
 import com.example.dhandha.data.local.db.DhandhaDatabase
 import com.example.dhandha.data.local.rent.RentUserEntity
 import com.example.dhandha.data.models.RentUserListCell
+import com.example.dhandha.data.paging.RentUserPagingSource
 import com.example.dhandha.helper.convertLongDateToString
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -27,14 +28,16 @@ class RentUserRepositoryImpl @Inject constructor(private val db: DhandhaDatabase
     private val dao = db.rentUserDao()
 
     override suspend fun getAllUsers(searchQuery: String): Flow<PagingData<RentUserListCell>> {
+
         return  Pager(
             config = PagingConfig(
-                pageSize = 1000,
+                pageSize = 3
             ),
 
             pagingSourceFactory = {
+
                 if(searchQuery.isEmpty()) {
-                    dao.fetchAllUsers()
+                   RentUserPagingSource(dao)
                 } else {
                     dao.searchUser(searchQuery)
                 }
