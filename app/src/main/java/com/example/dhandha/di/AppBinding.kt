@@ -4,6 +4,8 @@ import com.example.dhandha.data.repository.CoachingUserRepository
 import com.example.dhandha.data.repository.CoachingUserRepositoryImpl
 import com.example.dhandha.data.repository.GymUserRepository
 import com.example.dhandha.data.repository.GymUserRepositoryImpl
+import com.example.dhandha.data.repository.LibraryUserRepository
+import com.example.dhandha.data.repository.LibraryUserRepositoryImpl
 import com.example.dhandha.data.repository.RentUserRepository
 import com.example.dhandha.data.repository.RentUserRepositoryImpl
 import com.example.dhandha.services.Service
@@ -24,4 +26,7 @@ abstract class AppBinding {
 
     @Binds
     abstract fun providesGymUserRepository(repositoryImpl: GymUserRepositoryImpl): GymUserRepository
+
+    @Binds
+    abstract fun providesLibraryUserRepository(repositoryImpl: LibraryUserRepositoryImpl): LibraryUserRepository
 }

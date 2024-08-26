@@ -25,13 +25,15 @@ import com.example.dhandha.ui.rent.ui.RentScreen
 import com.example.dhandha.ui.rent.ui.create.CreateTenantScreen
 import com.example.dhandha.ui.dashboard.RentDashboardActivity
 import com.example.dhandha.ui.gym.detail.GymUserDetailActivity
-import com.example.dhandha.ui.library.LibraryActivity
+import com.example.dhandha.ui.library.LibraryScreen
 import com.example.dhandha.ui.library.detail.LibraryUserDetailActivity
 import com.example.dhandha.services.rent.detail.RentDetailActivity
 import com.example.dhandha.ui.coaching.create.CreateCoachingUserScreen
 import com.example.dhandha.ui.coaching.viewmodel.CoachingViewModel
 import com.example.dhandha.ui.gym.create.CreateGymUserScreen
 import com.example.dhandha.ui.gym.viewmodel.GymViewModel
+import com.example.dhandha.ui.library.create.CreateLibraryUserScreen
+import com.example.dhandha.ui.library.viewmodel.LibraryViewModel
 import com.example.dhandha.ui.rent.viewmodel.RentViewModel
 import com.example.dhandha.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,9 +44,6 @@ val NavControllerCompositionLocal = compositionLocalOf<NavController> {
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -66,8 +65,9 @@ private fun Routing(navController: NavHostController) {
     val rentViewModel: RentViewModel = hiltViewModel()
     val coachingViewModel: CoachingViewModel = hiltViewModel()
     val gymViewModel: GymViewModel = hiltViewModel()
+    val libraryViewModel: LibraryViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = Screen.Gym.routeId) {
+    NavHost(navController = navController, startDestination = Screen.MainApp.routeId) {
 
         composable(Screen.Authentication.routeId) {
             AuthenticationActivity(navController)
@@ -107,11 +107,15 @@ private fun Routing(navController: NavHostController) {
         }
 
         composable(Screen.Library.routeId) {
-            LibraryActivity(navController = navController)
+            LibraryScreen(libraryViewModel)
         }
 
         composable(Screen.LibraryUserDetail.routeId) {
             LibraryUserDetailActivity()
+        }
+
+        composable(Screen.CreateLibraryUser.routeId) {
+            CreateLibraryUserScreen(libraryViewModel)
         }
 
         composable(Screen.Coaching.routeId) {
@@ -145,7 +149,6 @@ sealed class Screen(val routeId: String) {
     data object Library: Screen("library")
     data object LibraryUserDetail: Screen("libraryUserDetail")
     data object CreateLibraryUser: Screen(routeId = "createLibraryUser")
-
 }
 
 

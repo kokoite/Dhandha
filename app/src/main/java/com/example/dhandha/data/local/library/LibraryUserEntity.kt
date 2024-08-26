@@ -7,7 +7,7 @@ import java.util.UUID
 @Entity(tableName = "library_user")
 data class LibraryUserEntity(
     @PrimaryKey
-    val id: String,
+    val id: UUID,
     val name: String,
     val phone: String,
     val address: String,
@@ -17,4 +17,7 @@ data class LibraryUserEntity(
     val monthStartingDate: Long,
     val monthExpiringDate: Long,
     val joinedDate: Long,
+    val lastPaymentDate: Long,
+    val lastPaymentAmount: Int,
+    val image: String?
 )

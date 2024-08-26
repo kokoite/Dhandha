@@ -64,7 +64,6 @@ class GymViewModel @Inject constructor(private val repository: GymUserRepository
         job?.cancel()
         viewModelScope.launch {
             try {
-
                 _userListState.value = UiState.Loading
                 delay(1000)
                 val flow = repository.fetchPaginatedUsers(searchQuery.value)
