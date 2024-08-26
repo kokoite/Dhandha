@@ -1,5 +1,6 @@
 package com.example.dhandha.ui.coaching
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.dhandha.R
 import com.example.dhandha.data.models.CoachingUserListCell
 import com.example.dhandha.ui.theme.AppTheme
@@ -43,12 +45,12 @@ fun CoachingUserListCell(user: CoachingUserListCell, onClick: ()->Unit) {
         Row(modifier = Modifier
             .padding(12.dp)
             .fillMaxWidth(1f), verticalAlignment = Alignment.CenterVertically) {
-            Image(painter = painterResource(id = R.drawable.happy_face), contentDescription = "", modifier = Modifier
+            AsyncImage(model = Uri.parse(user.image), contentDescription = "", modifier = Modifier
                 .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
                 .height(110.dp)
                 .width(100.dp)
                 .background(
-                    Color.Yellow
+                    Color.White
                 ), contentScale = ContentScale.FillBounds)
             Spacer(modifier = Modifier.width(20.dp))
             LibraryUserDetailContainer(user, Modifier.weight(1f))
