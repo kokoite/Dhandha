@@ -1,4 +1,4 @@
-package com.example.dhandha.ui.coaching
+package com.example.dhandha.ui.gym
 
 import SearchTextField
 import android.util.Log
@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -38,7 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -46,23 +43,19 @@ import androidx.paging.compose.itemKey
 import com.example.dhandha.NavControllerCompositionLocal
 import com.example.dhandha.R
 import com.example.dhandha.Screen
-import com.example.dhandha.ui.coaching.viewmodel.CoachingViewModel
+import com.example.dhandha.ui.gym.viewmodel.GymViewModel
 import com.example.dhandha.ui.header.SimpleHeader
 import com.example.dhandha.ui.state.UiState
 import com.example.dhandha.ui.theme.AppTheme
-import kotlinx.coroutines.flow.asStateFlow
-
-
-const val TAG = "TAG"
 
 @Composable
-fun CoachingScreen(viewModel: CoachingViewModel) {
+fun GymScreen(viewModel: GymViewModel) {
+    LaunchedEffect(key1 = null) {
+        viewModel.fetchUsers()
+    }
     val navController = NavControllerCompositionLocal.current
     val interactionSource = remember { MutableInteractionSource() }
     val focusManager = LocalFocusManager.current
-    LaunchedEffect(key1 = null) {
-        viewModel.fetchPaginatedUsers()
-    }
     Scaffold(
         floatingActionButton = {
             IconButton(onClick = {
@@ -71,11 +64,11 @@ fun CoachingScreen(viewModel: CoachingViewModel) {
                 .clip(CircleShape)
                 .background(Color.Black)) {
                 Icon(
-                    painterResource(id = R.drawable.graduationcap_fill), contentDescription = "", tint = Color.White, modifier = Modifier
+                    painterResource(id = R.drawable.dumbbell_fill), contentDescription = "", tint = Color.White, modifier = Modifier
                         .height(30.dp)
                         .width(30.dp)
                         .clickable {
-                            navController.navigate(Screen.CreateCoachingUser.routeId)
+                            navController.navigate(Screen.CreateGymUser.routeId)
                         })
             }
         }
@@ -91,14 +84,14 @@ fun CoachingScreen(viewModel: CoachingViewModel) {
             Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(30.dp)) {
 
                 HeaderWithSearch(viewModel)
-                CoachingUserContainer(viewModel)
+                GymUserContainer(viewModel)
             }
         }
     }
 }
 
 @Composable
-private fun HeaderWithSearch(viewModel: CoachingViewModel) {
+private fun HeaderWithSearch(viewModel: GymViewModel) {
     val navController = NavControllerCompositionLocal.current
     Column(verticalArrangement = Arrangement.spacedBy(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         SimpleHeader(title = "Welcome back Pranjal!!", painterResource(id = R.drawable.happy_face), action = {
@@ -109,7 +102,7 @@ private fun HeaderWithSearch(viewModel: CoachingViewModel) {
 }
 
 @Composable
-private fun SearchView(viewModel: CoachingViewModel) {
+private fun SearchView(viewModel: GymViewModel) {
     val text = remember { mutableStateOf("") }
     Box(modifier = Modifier
         .clip(RoundedCornerShape(12.dp))
@@ -126,20 +119,16 @@ private fun SearchView(viewModel: CoachingViewModel) {
 }
 
 @Composable
-private fun CoachingUserContainer(viewModel: CoachingViewModel) {
-
-    val navController = NavControllerCompositionLocal.current
-    val response = viewModel.userListState.collectAsState()
-    val lazyState = rememberLazyListState()
+private fun GymUserContainer(viewModel: GymViewModel) {
+    val uiState = viewModel.userListState.collectAsState()
     Card(modifier = Modifier
 
         .fillMaxWidth(1f)
         , colors = CardDefaults.cardColors( AppTheme.colorScheme.background)) {
 
-        when(response.value) {
-
+        when(uiState.value) {
             is UiState.Loading -> {
-                Log.d(TAG, "CoachingUserContainer: Loading")
+                Log.d("TAG", "GymUserContainer: loading")
                 Box(modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.7f), contentAlignment = Alignment.Center) {
@@ -152,62 +141,49 @@ private fun CoachingUserContainer(viewModel: CoachingViewModel) {
             }
 
             is UiState.Success -> {
+                val response = (uiState.value as UiState.Success).response.collectAsLazyPagingItems()
+                val loadState = response.loadState
 
-                val users = (response.value as UiState.Success).response.collectAsLazyPagingItems()
-                val loadState = users.loadState
-                when(loadState.append) {
-                    is LoadState.Loading -> {
-                        Log.d(TAG, "CoachingUserContainer: loading ${users.itemCount}")
-                    }
+                LazyColumn (verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(top = 6.dp)){
 
-                    is LoadState.NotLoading -> {
-                        Log.d(TAG, "CoachingUserContainer: not loading ${users.itemCount}")
-                    }
-
-                    is LoadState.Error -> {
-                        Log.d(TAG, "CoachingUserContainer: appending error ${users.itemCount}")
-                    }
-                }
-
-                when (loadState.refresh) {
-
-                    is LoadState.Loading -> {
-
-                    }
-
-                    is LoadState.NotLoading -> {
-                        if(users.itemCount == 0) {
-                            Box(modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.White), contentAlignment = Alignment.Center) {
-                                Text(
-                                    text = "No users found :(",
-                                    style = AppTheme.typography.placeholder,
-                                    fontSize = 23.sp
-                                )
+                    if(loadState.refresh is LoadState.NotLoading) {
+                        if(response.itemCount == 0) {
+                            item {
+                                Box(modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.White), contentAlignment = Alignment.Center) {
+                                    Text(text = "No users found :<__>:", style = AppTheme.typography.placeholder)
+                                }
                             }
-                        } else {
-                            LazyColumn(state = lazyState) {
-                                items(users.itemCount, key = users.itemKey { it.id}) {
-                                    val data = users[it]
-                                    data?.let {
-                                        CoachingUserListCell(user = data) {
 
-                                        }
+                        } else {
+                            items(response.itemCount, key = response.itemKey { item -> item.id }) {
+                                val data = response[it]
+                                data?.let {
+                                    GymUserListCell(data) {
+
                                     }
                                 }
                             }
                         }
                     }
 
-                    is LoadState.Error -> {
-                        Log.d(TAG, "CoachingUserContainer: refresh error ${users.itemCount}")
+                    item {
+                        if(loadState.append is LoadState.Loading) {
+                            Box(modifier = Modifier
+                                .fillMaxWidth(), contentAlignment = Alignment.Center) {
+                                CircularProgressIndicator(modifier = Modifier
+                                    .height(40.dp)
+                                    .width(40.dp),
+                                    color = Color.Red
+                                )
+                            }
+                        }
                     }
                 }
             }
-
             is UiState.Error -> {
-                Log.d(TAG, "CoachingUserContainer: Main error show box with retry button")
+
             }
         }
     }

@@ -34,10 +34,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.dhandha.R
 import com.example.dhandha.ui.botttomsheet.ActionBottomSheet
+import com.example.dhandha.ui.coaching.viewmodel.CoachingViewModel
 import com.example.dhandha.ui.theme.AppTheme
 
 @Composable
-fun CoachingUserDetailAcitivty() {
+fun CoachingUserDetailAcitivty(viewModel: CoachingViewModel) {
     val editButtonClicked = remember { mutableStateOf(false) }
     Scaffold(
         floatingActionButton = {
