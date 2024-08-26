@@ -2,6 +2,8 @@ package com.example.dhandha.data.local.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.dhandha.data.ListOfStringConverter
 import com.example.dhandha.data.local.coaching.CoachingUserDao
 import com.example.dhandha.data.local.coaching.CoachingUserEntity
 import com.example.dhandha.data.local.gym.GymUserDao
@@ -14,7 +16,7 @@ import com.example.dhandha.data.local.rent.RentUserDao
 import com.example.dhandha.data.local.rent.RentUserEntity
 
 @Database(entities = [OwnerEntity::class, CoachingUserEntity::class, RentUserEntity::class, GymUserEntity::class, LibraryUserEntity::class], version = 1, exportSchema = false)
-
+@TypeConverters(ListOfStringConverter::class)
 abstract class DhandhaDatabase: RoomDatabase() {
     abstract fun ownerDao(): OwnerDao
     abstract fun coachingUserDao(): CoachingUserDao

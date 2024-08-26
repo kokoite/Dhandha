@@ -26,12 +26,12 @@ interface RentUserRepository {
 class RentUserRepositoryImpl @Inject constructor(private val db: DhandhaDatabase) : RentUserRepository {
 
     private val dao = db.rentUserDao()
-
     override suspend fun getAllUsers(searchQuery: String): Flow<PagingData<RentUserListCell>> {
 
         return  Pager(
             config = PagingConfig(
-                pageSize = 3
+                pageSize = 3,
+                initialLoadSize = 10
             ),
 
             pagingSourceFactory = {

@@ -18,7 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.dhandha.ui.authentication.AuthenticationActivity
 import com.example.dhandha.ui.mainapp.MainAppActivity
-import com.example.dhandha.ui.coaching.CoachingActivity
+import com.example.dhandha.ui.coaching.CoachingScreen
 import com.example.dhandha.ui.coaching.detail.CoachingUserDetailAcitivty
 import com.example.dhandha.ui.gym.GymActivity
 import com.example.dhandha.ui.rent.ui.RentScreen
@@ -28,6 +28,8 @@ import com.example.dhandha.ui.gym.detail.GymUserDetailActivity
 import com.example.dhandha.ui.library.LibraryActivity
 import com.example.dhandha.ui.library.detail.LibraryUserDetailActivity
 import com.example.dhandha.services.rent.detail.RentDetailActivity
+import com.example.dhandha.ui.coaching.create.CreateCoachingUserScreen
+import com.example.dhandha.ui.coaching.viewmodel.CoachingViewModel
 import com.example.dhandha.ui.rent.viewmodel.RentViewModel
 import com.example.dhandha.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,8 +62,9 @@ class MainActivity : ComponentActivity() {
 private fun Routing(navController: NavHostController) {
 
     val rentViewModel: RentViewModel = hiltViewModel()
+    val coachingViewModel: CoachingViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = Screen.Rent.routeId) {
+    NavHost(navController = navController, startDestination = Screen.Coaching.routeId) {
 
         composable(Screen.Authentication.routeId) {
             AuthenticationActivity(navController)
@@ -91,7 +94,7 @@ private fun Routing(navController: NavHostController) {
         composable(Screen.Gym.routeId) {
             GymActivity(navController = navController)
         }
-        
+
         composable(Screen.GymUserDetail.routeId) {
             GymUserDetailActivity(navController = navController)
         }
@@ -105,14 +108,16 @@ private fun Routing(navController: NavHostController) {
         }
 
         composable(Screen.Coaching.routeId) {
-            CoachingActivity(navController = navController)
+            CoachingScreen(viewModel = coachingViewModel)
         }
 
         composable(Screen.CoachingUserDetail.routeId) {
             CoachingUserDetailAcitivty()
         }
 
-
+        composable(Screen.CreateCoachingUser.routeId) {
+            CreateCoachingUserScreen(viewModel = coachingViewModel)
+        }
     }
 }
 

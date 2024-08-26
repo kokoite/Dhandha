@@ -25,10 +25,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.dhandha.R
+import com.example.dhandha.data.models.CoachingUserListCell
 import com.example.dhandha.ui.theme.AppTheme
 
 @Composable
-fun CoachingUserListCell(onClick: ()->Unit) {
+fun CoachingUserListCell(user: CoachingUserListCell, onClick: ()->Unit) {
     val interactionSource = remember { MutableInteractionSource() }
     Box(
         modifier = Modifier
@@ -50,57 +51,57 @@ fun CoachingUserListCell(onClick: ()->Unit) {
                     Color.Yellow
                 ), contentScale = ContentScale.FillBounds)
             Spacer(modifier = Modifier.width(20.dp))
-            LibraryUserDetailContainer(Modifier.weight(1f))
+            LibraryUserDetailContainer(user, Modifier.weight(1f))
         }
     }
 }
 
 @Composable
-private fun LibraryUserDetailContainer(modifier: Modifier) {
+private fun LibraryUserDetailContainer(user: CoachingUserListCell, modifier: Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        NamePhoneContainer(Modifier.fillMaxWidth())
-        PendingAndPlanContainer(Modifier.fillMaxWidth())
-        UpcomingPaymentDateContainer(Modifier.fillMaxWidth())
+        NamePhoneContainer(user.name, user.phone,Modifier.fillMaxWidth())
+        PendingAndPlanContainer(user.pendingAmount, user.feesAmount, Modifier.fillMaxWidth())
+        UpcomingPaymentDateContainer(user.expiryDate, Modifier.fillMaxWidth())
     }
 }
 
 @Composable
-private fun NamePhoneContainer(modifier: Modifier) {
+private fun NamePhoneContainer(name: String, phone: String, modifier: Modifier) {
     Row(modifier = modifier) {
 
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(text = "Name", style = AppTheme.typography.placeholder)
-            Text(text = "Pranjal", style = AppTheme.typography.label)
+            Text(text = name, style = AppTheme.typography.label)
         }
 
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(text = "Phone", style = AppTheme.typography.placeholder)
-            Text(text = "8219376455", style = AppTheme.typography.label)
+            Text(text = phone, style = AppTheme.typography.label)
         }
     }
 }
 
 @Composable
-private fun PendingAndPlanContainer(modifier: Modifier) {
+private fun PendingAndPlanContainer(pending: String, fees: String, modifier: Modifier) {
     Row(modifier) {
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-            Text(text = "Pending ", style = AppTheme.typography.placeholder)
-            Text(text = "2000", style = AppTheme.typography.label)
+            Text(text = "Pending", style = AppTheme.typography.placeholder)
+            Text(text = pending, style = AppTheme.typography.label)
         }
 
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-            Text(text = "Plan Amount", style = AppTheme.typography.placeholder)
-            Text(text = "20000", style = AppTheme.typography.label)
+            Text(text = "Fee", style = AppTheme.typography.placeholder)
+            Text(text = fees, style = AppTheme.typography.label)
         }
     }
 }
 
 @Composable
-private fun UpcomingPaymentDateContainer(modifier: Modifier) {
+private fun UpcomingPaymentDateContainer(date: String, modifier: Modifier) {
     Row(modifier) {
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
             Text(text = "Upcoming payment date", style = AppTheme.typography.placeholder)
-            Text(text = "20-07-2024", style = AppTheme.typography.label)
+            Text(text = date, style = AppTheme.typography.label)
         }
     }
 }

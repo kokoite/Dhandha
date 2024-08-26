@@ -1,4 +1,4 @@
-package com.example.dhandha.ui.rent.ui
+package com.example.dhandha.ui.coaching
 
 import SearchTextField
 import android.util.Log
@@ -8,7 +8,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,10 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -36,50 +35,48 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.example.dhandha.NavControllerCompositionLocal
 import com.example.dhandha.R
 import com.example.dhandha.Screen
+import com.example.dhandha.ui.coaching.viewmodel.CoachingViewModel
 import com.example.dhandha.ui.header.SimpleHeader
-import com.example.dhandha.ui.rent.viewmodel.RentViewModel
 import com.example.dhandha.ui.state.UiState
 import com.example.dhandha.ui.theme.AppTheme
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemContentType
-import androidx.paging.compose.itemKey
+import kotlinx.coroutines.flow.asStateFlow
 
 
 const val TAG = "TAG"
 
 @Composable
-fun RentScreen(navController: NavController, viewModel: RentViewModel) {
+fun CoachingScreen(viewModel: CoachingViewModel) {
+    val navController = NavControllerCompositionLocal.current
     val interactionSource = remember { MutableInteractionSource() }
     val focusManager = LocalFocusManager.current
-
     LaunchedEffect(key1 = null) {
-        viewModel.fetchAllUsers()
+        viewModel.fetchPaginatedUsers()
     }
-
     Scaffold(
         floatingActionButton = {
             IconButton(onClick = {
-               print("clicked")
+                print("clicked")
             }, modifier = Modifier
                 .clip(CircleShape)
                 .background(Color.Black)) {
-                Icon(painter = painterResource(id = R.drawable.house_fill), contentDescription = "", tint = Color.White, modifier = Modifier
-                    .height(30.dp)
-                    .width(30.dp)
-                    .clickable {
-                        navController.navigate(Screen.CreateTenant.routeId)
-                    })
+                Icon(
+                    painterResource(id = R.drawable.graduationcap_fill), contentDescription = "", tint = Color.White, modifier = Modifier
+                        .height(30.dp)
+                        .width(30.dp)
+                        .clickable {
+                            navController.navigate(Screen.CreateCoachingUser.routeId)
+                        })
             }
         }
 
@@ -93,29 +90,27 @@ fun RentScreen(navController: NavController, viewModel: RentViewModel) {
             }) {
             Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(30.dp)) {
 
-                HeaderWithSearch(navController, viewModel)
-                RentUserContainer(viewModel)
+                HeaderWithSearch(viewModel)
+                CoachingUserContainer(viewModel)
             }
         }
     }
-
 }
 
 @Composable
-private fun HeaderWithSearch(navController: NavController, viewModel: RentViewModel) {
-    Column {
+private fun HeaderWithSearch(viewModel: CoachingViewModel) {
+    val navController = NavControllerCompositionLocal.current
+    Column(verticalArrangement = Arrangement.spacedBy(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         SimpleHeader(title = "Welcome back Pranjal!!", painterResource(id = R.drawable.happy_face), action = {
             navController.navigate(route = Screen.RentDashbaord.routeId)
         })
-        Spacer(modifier = Modifier.height(20.dp))
         SearchView(viewModel)
     }
 }
 
 @Composable
-private fun SearchView(viewModel: RentViewModel) {
+private fun SearchView(viewModel: CoachingViewModel) {
     val text = remember { mutableStateOf("") }
-
     Box(modifier = Modifier
         .clip(RoundedCornerShape(12.dp))
         .fillMaxWidth(1f)
@@ -126,27 +121,25 @@ private fun SearchView(viewModel: RentViewModel) {
                 RoundedCornerShape(12.dp)
             )) {
             viewModel.updateSearchQuery(text.value)
-            viewModel.fetchAllUsers()
         }
     }
 }
 
 @Composable
-private fun RentUserContainer(viewModel: RentViewModel) {
+private fun CoachingUserContainer(viewModel: CoachingViewModel) {
 
     val navController = NavControllerCompositionLocal.current
-
-    val uiState = viewModel.userListUiState.collectAsState()
-    val columnState = rememberLazyListState()
-
-
+    val response = viewModel.userListState.collectAsState()
+    val lazyState = rememberLazyListState()
     Card(modifier = Modifier
-        .fillMaxWidth(1f)
-        .fillMaxHeight()
-    , colors = CardDefaults.cardColors( AppTheme.colorScheme.background)) {
 
-        when(uiState.value) {
+        .fillMaxWidth(1f)
+        , colors = CardDefaults.cardColors( AppTheme.colorScheme.background)) {
+
+        when(response.value) {
+
             is UiState.Loading -> {
+                Log.d(TAG, "CoachingUserContainer: Loading")
                 Box(modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.7f), contentAlignment = Alignment.Center) {
@@ -154,48 +147,69 @@ private fun RentUserContainer(viewModel: RentViewModel) {
                         .height(40.dp)
                         .width(40.dp),
                         color = Color.Red
-                        )
+                    )
                 }
             }
+
             is UiState.Success -> {
-                val response = (uiState.value as UiState.Success).response.collectAsLazyPagingItems()
-                val loadState = response.loadState
-                LazyColumn (state = columnState, verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(top = 6.dp)){
-                    items(count = response.itemCount, key = response.itemKey { it.id }, contentType = response.itemContentType { "content-type"}) {
-                        val data = response[it]
-                        data?.let {
-                            RentUserListCell(data) {
-                                navController.navigate(Screen.RentDetail.routeId)
-                            }
-                        }
+
+                val users = (response.value as UiState.Success).response.collectAsLazyPagingItems()
+                val loadState = users.loadState
+                when(loadState.append) {
+                    is LoadState.Loading -> {
+                        Log.d(TAG, "CoachingUserContainer: loading ${users.itemCount}")
                     }
 
-                    if(loadState.append == LoadState.Loading) {
-                        item {
+                    is LoadState.NotLoading -> {
+                        Log.d(TAG, "CoachingUserContainer: not loading ${users.itemCount}")
+                    }
+
+                    is LoadState.Error -> {
+                        Log.d(TAG, "CoachingUserContainer: appending error ${users.itemCount}")
+                    }
+                }
+
+                when (loadState.refresh) {
+
+                    is LoadState.Loading -> {
+
+                    }
+
+                    is LoadState.NotLoading -> {
+                        if(users.itemCount == 0) {
                             Box(modifier = Modifier
-                                .fillMaxWidth()
-                                , contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator(modifier = Modifier
-                                    .height(40.dp)
-                                    .width(40.dp),
-                                    color = Color.Red
+                                .fillMaxSize()
+                                .background(Color.White), contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = "No users found :(",
+                                    style = AppTheme.typography.placeholder,
+                                    fontSize = 23.sp
                                 )
                             }
+                        } else {
+                            LazyColumn(state = lazyState) {
+                                items(users.itemCount, key = users.itemKey { it.id}) {
+                                    val data = users[it]
+                                    data?.let {
+                                        CoachingUserListCell(user = data) {
+
+                                        }
+                                    }
+                                }
+                            }
                         }
+
+                    }
+
+                    is LoadState.Error -> {
+                        Log.d(TAG, "CoachingUserContainer: refresh error ${users.itemCount}")
                     }
                 }
-
             }
+
             is UiState.Error -> {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)) {
-                    Text(text = "Oops somthing went wrong. Please retry", textAlign = TextAlign.Center)
-                }
-                Log.d(TAG, "RentUserContainer: Error")
+                Log.d(TAG, "CoachingUserContainer: Main error show box with retry button")
             }
-
-            else -> {}
         }
     }
 }

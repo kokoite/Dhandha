@@ -1,5 +1,7 @@
 package com.example.dhandha.di
 
+import com.example.dhandha.data.repository.CoachingUserRepository
+import com.example.dhandha.data.repository.CoachingUserRepositoryImpl
 import com.example.dhandha.data.repository.RentUserRepository
 import com.example.dhandha.data.repository.RentUserRepositoryImpl
 import dagger.Binds
@@ -13,4 +15,7 @@ import dagger.hilt.components.SingletonComponent
 abstract class AppBinding {
     @Binds
     abstract fun providesRentUserRepository(repositoryImpl: RentUserRepositoryImpl): RentUserRepository
+
+    @Binds
+    abstract fun providesCoachingUserRepository(repositoryImpl: CoachingUserRepositoryImpl): CoachingUserRepository
 }
