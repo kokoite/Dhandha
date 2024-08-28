@@ -1,12 +1,9 @@
 package com.example.dhandha.ui.rent.ui.create
 
-import CustomTextField
+
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,46 +12,49 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddAPhoto
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDatePickerState
+
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
+
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+
 import com.example.dhandha.NavControllerCompositionLocal
 import com.example.dhandha.R
 import com.example.dhandha.data.models.RentUser
 import com.example.dhandha.helper.getTodayDate
-import com.example.dhandha.helper.showDatePicker
+
+import com.example.dhandha.ui.customviews.CameraContainer
+import com.example.dhandha.ui.customviews.createFormDateInputContainer
+import com.example.dhandha.ui.customviews.createFormInputContainer
 import com.example.dhandha.ui.header.GeneralHeader
+import com.example.dhandha.ui.model.formContainer.FormDateInputContainer
+import com.example.dhandha.ui.model.formContainer.FormInputContainer
 import com.example.dhandha.ui.rent.viewmodel.RentViewModel
 import com.example.dhandha.ui.state.UiState
 import com.example.dhandha.ui.theme.AppTheme
@@ -62,7 +62,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 
 @Composable
-fun CreateTenantScreen(navController: NavController, viewModel: RentViewModel) {
+fun CreateTenantScreen(viewModel: RentViewModel) {
     val interactionSource = remember {
         MutableInteractionSource()
     }
@@ -248,90 +248,6 @@ private fun handleResponse(uiState: UiState<Boolean>, navController: NavControll
 }
 
 @Composable
-fun CameraContainer(selectedImageUri: MutableState<Uri?>) {
-    val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
-        uri: Uri? ->
-        uri?.let {
-            selectedImageUri?.value = uri
-        }
-    }
-    val imageModifier = remember {
-        mutableStateOf(
-            Modifier
-                .height(200.dp)
-                .width(200.dp)
-        )
-    }
-
-    Row(modifier = Modifier
-        .fillMaxWidth(1f)
-        .clickable {
-            galleryLauncher.launch("image/*")
-        }, horizontalArrangement = Arrangement.Center) {
-
-        if(selectedImageUri.value?.toString().isNullOrEmpty()) {
-            Image(imageVector = Icons.Default.AddAPhoto, contentDescription = "",
-                modifier = imageModifier.value
-                    .scale(scaleX = -0.5f, scaleY = 0.5f)
-            )
-        } else {
-            Log.d("TAG", "CameraContainer: ")
-            Image(painter = rememberImagePainter(data = selectedImageUri.value), contentDescription = "", imageModifier.value)
-        }
-    }
-}
-
-@Composable
-private fun createFormInputContainer(data: List<FormInputContainer>) {
-    Row(modifier = Modifier.fillMaxWidth(),  horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        for (item in data) {
-            Column (verticalArrangement = Arrangement.spacedBy(2.dp), modifier = Modifier.weight(1f)) {
-                Text(text = item.labelText, style = AppTheme.typography.placeholder)
-                CustomTextField(textState = item.state, placeholderText = item.placeholderText, modifier = Modifier.fillMaxWidth())
-                Spacer(modifier = Modifier
-                    .height(1.dp)
-                    .fillMaxWidth()
-                    .background(Color.LightGray))
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun createFormDateInputContainer(data: List<FormDateInputContainer>) {
-    val shouldShow = remember { mutableStateOf(false) }
-    val dateState = rememberDatePickerState()
-    val selectedContainer = remember {
-        mutableStateOf(0)
-    }
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        data.withIndex().forEach { (index, item)->
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp),
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable {
-                        shouldShow.value = true
-                        selectedContainer.value = index
-                    }
-            ) {
-                Text(text = item.labelText, style = AppTheme.typography.placeholder)
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(text = item.state.value, style = MaterialTheme.typography.bodyMedium)
-                Spacer(modifier = Modifier
-                    .height(1.dp)
-                    .fillMaxWidth()
-                    .background(Color.LightGray))
-            }
-        }
-    }
-    if(shouldShow.value) {
-        showDatePicker(state = dateState, shouldShow = shouldShow, textState = data[selectedContainer.value].state)
-    }
-}
-
-@Composable
 fun PropertyImageButton() {
     Button(onClick = { /*TODO*/ }, contentPadding = PaddingValues(horizontal = 20.dp, vertical = 3.dp), modifier = Modifier
         .clip(
@@ -352,14 +268,3 @@ fun CreateButton(onClick: () -> Unit) {
         Text("Add user", style = AppTheme.typography.buttonText)
     }
 }
-
-data class FormInputContainer(
-    val labelText: String,
-    val placeholderText: String,
-    val state: MutableState<String>
-)
-
-data class FormDateInputContainer(
-    val labelText: String,
-    val state: MutableState<String>
-)

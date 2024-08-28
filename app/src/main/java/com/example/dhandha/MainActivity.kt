@@ -67,7 +67,7 @@ private fun Routing(navController: NavHostController) {
     val gymViewModel: GymViewModel = hiltViewModel()
     val libraryViewModel: LibraryViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = Screen.Rent.routeId) {
+    NavHost(navController = navController, startDestination = Screen.CreateCoachingUser.routeId) {
 
         composable(Screen.Authentication.routeId) {
             AuthenticationActivity(navController)
@@ -79,15 +79,15 @@ private fun Routing(navController: NavHostController) {
 
         composable(Screen.Rent.routeId) {
 
-            RentScreen(navController = navController, rentViewModel)
+            RentScreen(rentViewModel)
         }
 
         composable(Screen.RentDetail.routeId) {
-            RentDetailActivity(navController = navController, rentViewModel)
+            RentDetailActivity(rentViewModel)
         }
 
         composable(Screen.CreateTenant.routeId) {
-            CreateTenantScreen(navController, rentViewModel)
+            CreateTenantScreen(rentViewModel)
         }
 
         composable(Screen.RentDashbaord.routeId) {
@@ -103,7 +103,7 @@ private fun Routing(navController: NavHostController) {
         }
 
         composable(Screen.GymUserDetail.routeId) {
-            GymUserDetailActivity(navController = navController)
+            GymUserDetailActivity()
         }
 
         composable(Screen.Library.routeId) {

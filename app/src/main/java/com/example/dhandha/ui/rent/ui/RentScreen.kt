@@ -59,9 +59,10 @@ import androidx.paging.compose.itemKey
 const val TAG = "TAG"
 
 @Composable
-fun RentScreen(navController: NavController, viewModel: RentViewModel) {
+fun RentScreen(viewModel: RentViewModel) {
     val interactionSource = remember { MutableInteractionSource() }
     val focusManager = LocalFocusManager.current
+    val navController = NavControllerCompositionLocal.current
 
     LaunchedEffect(key1 = null) {
         viewModel.fetchAllUsers()

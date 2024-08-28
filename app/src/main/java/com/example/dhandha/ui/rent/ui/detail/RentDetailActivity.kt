@@ -40,7 +40,7 @@ import com.example.dhandha.ui.theme.AppTheme
 
 
 @Composable
-fun RentDetailActivity(navController: NavController, viewModel: RentViewModel) {
+fun RentDetailActivity(viewModel: RentViewModel) {
     val editButtonClicked = remember { mutableStateOf(false) }
     Scaffold(
         floatingActionButton = {

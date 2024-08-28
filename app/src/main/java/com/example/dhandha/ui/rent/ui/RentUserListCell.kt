@@ -48,15 +48,13 @@ fun RentUserListCell(user: RentUserListCell, onClick: () -> Unit) {
         Row(modifier = Modifier
             .padding(12.dp)
             .fillMaxWidth(1f), verticalAlignment = Alignment.CenterVertically) {
-           Image(painter = rememberImagePainter(data = Uri.parse(user.image ?: "")), contentDescription = "", modifier = Modifier
-               .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
-               .height(110.dp)
-               .width(100.dp)
-               .background(
-                   Color.Yellow
-               ), contentScale = ContentScale.FillBounds)
-
-
+            AsyncImage(model = Uri.parse(user.image), contentDescription = "", modifier = Modifier
+                .clip(RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp))
+                .height(110.dp)
+                .width(100.dp)
+                .background(
+                    Color.White
+                ), contentScale = ContentScale.FillBounds)
             Spacer(modifier = Modifier.width(20.dp))
             UserDetailContainer(user, Modifier.weight(1f))
         }

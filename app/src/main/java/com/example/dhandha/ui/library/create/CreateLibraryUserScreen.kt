@@ -49,17 +49,20 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.example.dhandha.NavControllerCompositionLocal
 import com.example.dhandha.R
 import com.example.dhandha.data.models.LibraryUser
 import com.example.dhandha.helper.getTodayDate
 import com.example.dhandha.helper.showDatePicker
+import com.example.dhandha.ui.customviews.CameraContainer
+import com.example.dhandha.ui.customviews.createFormDateInputContainer
+import com.example.dhandha.ui.customviews.createFormInputContainer
 import com.example.dhandha.ui.header.GeneralHeader
 import com.example.dhandha.ui.library.viewmodel.LibraryViewModel
-import com.example.dhandha.ui.rent.ui.create.CameraContainer
-import com.example.dhandha.ui.rent.ui.create.FormDateInputContainer
-import com.example.dhandha.ui.rent.ui.create.FormInputContainer
+import com.example.dhandha.ui.model.formContainer.FormDateInputContainer
+import com.example.dhandha.ui.model.formContainer.FormInputContainer
 import com.example.dhandha.ui.state.UiState
 import com.example.dhandha.ui.theme.AppTheme
 import java.util.UUID
@@ -161,11 +164,9 @@ private fun CreateUserContainer(viewModel: LibraryViewModel) {
             createFormInputContainer(data = listOf(feesData, pendingData))
 
 
-
             val startMonthData = FormDateInputContainer("Month Start date", startMonthDate)
             val expiryMonthData = FormDateInputContainer("Month End Date", expiryMonthState)
             createFormDateInputContainer(data = listOf(startMonthData, expiryMonthData))
-
 
             CreateButton {
                 val name = nameState.value
@@ -234,90 +235,6 @@ private fun handleResponse(uiState: UiState<Boolean>, shouldObserve: MutableStat
             shouldObserve.value = false
             Log.d("TAG", "CreateUserContainer: error")
         }
-    }
-}
-
-@Composable
-fun CameraContainer(selectedImageUri: MutableState<Uri?>) {
-    val galleryLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
-            uri: Uri? ->
-        uri?.let {
-            selectedImageUri?.value = uri
-        }
-    }
-    val imageModifier = remember {
-        mutableStateOf(
-            Modifier
-                .height(200.dp)
-                .width(200.dp)
-        )
-    }
-
-    Row(modifier = Modifier
-        .fillMaxWidth(1f)
-        .clickable {
-            galleryLauncher.launch("image/*")
-        }, horizontalArrangement = Arrangement.Center) {
-
-        if(selectedImageUri.value?.toString().isNullOrEmpty()) {
-            Image(imageVector = Icons.Default.AddAPhoto, contentDescription = "",
-                modifier = imageModifier.value
-                    .scale(scaleX = -0.5f, scaleY = 0.5f)
-            )
-        } else {
-            Log.d("TAG", "CameraContainer: ")
-            Image(painter = rememberImagePainter(data = selectedImageUri.value), contentDescription = "", imageModifier.value)
-        }
-    }
-}
-
-@Composable
-private fun createFormInputContainer(data: List<FormInputContainer>) {
-    Row(modifier = Modifier.fillMaxWidth(),  horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        for (item in data) {
-            Column (verticalArrangement = Arrangement.spacedBy(2.dp), modifier = Modifier.weight(1f)) {
-                Text(text = item.labelText, style = AppTheme.typography.placeholder)
-                CustomTextField(textState = item.state, placeholderText = item.placeholderText, modifier = Modifier.fillMaxWidth())
-                Spacer(modifier = Modifier
-                    .height(1.dp)
-                    .fillMaxWidth()
-                    .background(Color.LightGray))
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun createFormDateInputContainer(data: List<FormDateInputContainer>) {
-    val shouldShow = remember { mutableStateOf(false) }
-    val dateState = rememberDatePickerState()
-    val selectedContainer = remember {
-        mutableStateOf(0)
-    }
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-        data.withIndex().forEach { (index, item)->
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp),
-                modifier = Modifier
-                    .weight(1f)
-                    .clickable {
-                        shouldShow.value = true
-                        selectedContainer.value = index
-                    }
-            ) {
-                Text(text = item.labelText, style = AppTheme.typography.placeholder)
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(text = item.state.value, style = MaterialTheme.typography.bodyMedium)
-                Spacer(modifier = Modifier
-                    .height(1.dp)
-                    .fillMaxWidth()
-                    .background(Color.LightGray))
-            }
-        }
-    }
-    if(shouldShow.value) {
-        showDatePicker(state = dateState, shouldShow = shouldShow, textState = data[selectedContainer.value].state)
     }
 }
 

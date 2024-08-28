@@ -38,7 +38,7 @@ import com.example.dhandha.ui.theme.AppTheme
 
 
 @Composable
-fun GymUserDetailActivity(navController: NavController) {
+fun GymUserDetailActivity() {
     val editButtonClicked = remember { mutableStateOf(false) }
     Scaffold(
         floatingActionButton = {
