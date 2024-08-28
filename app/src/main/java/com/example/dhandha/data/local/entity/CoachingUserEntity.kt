@@ -1,4 +1,4 @@
-package com.example.dhandha.data.local.coaching
+package com.example.dhandha.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,10 +1,9 @@
-package com.example.dhandha.data.local.coaching
+package com.example.dhandha.data.local.dao
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.dhandha.data.local.rent.RentUserEntity
+import com.example.dhandha.data.local.entity.CoachingUserEntity
 
 @Dao
 interface CoachingUserDao  {

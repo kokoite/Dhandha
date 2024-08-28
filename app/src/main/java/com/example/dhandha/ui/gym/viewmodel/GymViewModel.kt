@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.example.dhandha.data.local.gym.GymUserEntity
+import com.example.dhandha.data.local.entity.GymUserEntity
 import com.example.dhandha.data.models.GymUser
 import com.example.dhandha.data.models.GymUserListCell
 import com.example.dhandha.data.repository.GymUserRepository

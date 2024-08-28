@@ -51,7 +51,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.dhandha.NavControllerCompositionLocal
 import com.example.dhandha.R
-import com.example.dhandha.data.models.CreateRentUser
+import com.example.dhandha.data.models.RentUser
 import com.example.dhandha.helper.getTodayDate
 import com.example.dhandha.helper.showDatePicker
 import com.example.dhandha.ui.header.GeneralHeader
@@ -189,7 +189,7 @@ fun CreateUserContainer(viewModel: RentViewModel) {
                 val lastPaymentAmount = lastPaymentAmountState.value
                 val advance = advanceState.value
                 val security = securityState.value
-                val user = CreateRentUser(
+                val user = RentUser(
                     id = UUID.randomUUID(),
                     name = name,
                     phone = phone,
@@ -211,7 +211,7 @@ fun CreateUserContainer(viewModel: RentViewModel) {
                 viewModel.insertUser(user)
                 takePermission.value = true
                 scope.launch {
-                    viewModel._uiState.collect {
+                    viewModel.createUserState.collect {
                         handleResponse(it, controller)
                     }
                 }

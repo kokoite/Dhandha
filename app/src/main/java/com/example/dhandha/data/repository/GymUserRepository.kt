@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.room.withTransaction
 import com.example.dhandha.data.local.db.DhandhaDatabase
-import com.example.dhandha.data.local.gym.GymUserEntity
+import com.example.dhandha.data.local.entity.GymUserEntity
 import com.example.dhandha.data.paging.GymUserPagingSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

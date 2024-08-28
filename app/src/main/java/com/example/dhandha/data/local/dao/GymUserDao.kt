@@ -1,9 +1,9 @@
-package com.example.dhandha.data.local.gym
+package com.example.dhandha.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.dhandha.data.local.coaching.CoachingUserEntity
+import com.example.dhandha.data.local.entity.GymUserEntity
 
 @Dao
 interface GymUserDao {

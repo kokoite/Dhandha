@@ -67,7 +67,7 @@ private fun Routing(navController: NavHostController) {
     val gymViewModel: GymViewModel = hiltViewModel()
     val libraryViewModel: LibraryViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = Screen.MainApp.routeId) {
+    NavHost(navController = navController, startDestination = Screen.Rent.routeId) {
 
         composable(Screen.Authentication.routeId) {
             AuthenticationActivity(navController)

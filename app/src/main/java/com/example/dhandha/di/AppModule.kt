@@ -1,13 +1,8 @@
 package com.example.dhandha.di
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.RoomMasterTable
-import com.example.dhandha.data.ListOfStringConverter
 import com.example.dhandha.data.local.db.DhandhaDatabase
-import com.example.dhandha.data.local.rent.RentUserDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

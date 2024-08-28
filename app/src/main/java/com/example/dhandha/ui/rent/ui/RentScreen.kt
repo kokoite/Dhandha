@@ -126,7 +126,6 @@ private fun SearchView(viewModel: RentViewModel) {
                 RoundedCornerShape(12.dp)
             )) {
             viewModel.updateSearchQuery(text.value)
-            viewModel.fetchAllUsers()
         }
     }
 }
@@ -138,7 +137,6 @@ private fun RentUserContainer(viewModel: RentViewModel) {
 
     val uiState = viewModel.userListUiState.collectAsState()
     val columnState = rememberLazyListState()
-
 
     Card(modifier = Modifier
         .fillMaxWidth(1f)
@@ -160,31 +158,46 @@ private fun RentUserContainer(viewModel: RentViewModel) {
             is UiState.Success -> {
                 val response = (uiState.value as UiState.Success).response.collectAsLazyPagingItems()
                 val loadState = response.loadState
-                LazyColumn (state = columnState, verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier.padding(top = 6.dp)){
-                    items(count = response.itemCount, key = response.itemKey { it.id }, contentType = response.itemContentType { "content-type"}) {
-                        val data = response[it]
-                        data?.let {
-                            RentUserListCell(data) {
-                                navController.navigate(Screen.RentDetail.routeId)
-                            }
+                if(loadState.refresh is LoadState.NotLoading) {
+                    if(response.itemCount == 0) {
+                        Box(modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White), contentAlignment = Alignment.Center) {
+                            Text(text = "No users found", style = AppTheme.typography.placeholder, fontSize = 24.sp)
                         }
-                    }
+                    } else {
+                        LazyColumn (state = columnState, verticalArrangement = Arrangement.spacedBy(16.dp), modifier = Modifier
+                            .padding(top = 6.dp)
+                            .fillMaxSize()
+                            .background(
+                                Color.Yellow
+                            )){
+                            items(count = response.itemCount, key = response.itemKey { it.id }, contentType = response.itemContentType { "content-type"}) {
+                                val data = response[it]
+                                data?.let {
+                                    RentUserListCell(data) {
+                                        navController.navigate(Screen.RentDetail.routeId)
+                                    }
+                                }
+                            }
 
-                    if(loadState.append == LoadState.Loading) {
-                        item {
-                            Box(modifier = Modifier
-                                .fillMaxWidth()
-                                , contentAlignment = Alignment.Center) {
-                                CircularProgressIndicator(modifier = Modifier
-                                    .height(40.dp)
-                                    .width(40.dp),
-                                    color = Color.Red
-                                )
+                            if(loadState.append is LoadState.Loading) {
+                                item {
+                                    Box(modifier = Modifier
+                                        .fillMaxWidth()
+                                        , contentAlignment = Alignment.Center) {
+                                        CircularProgressIndicator(modifier = Modifier
+                                            .height(40.dp)
+                                            .width(40.dp),
+                                            color = Color.Red
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
-
+                
             }
             is UiState.Error -> {
                 Box(modifier = Modifier

@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.room.withTransaction
-import com.example.dhandha.data.local.coaching.CoachingUserEntity
+import com.example.dhandha.data.local.entity.CoachingUserEntity
 import com.example.dhandha.data.local.db.DhandhaDatabase
 import com.example.dhandha.data.paging.CoachingUserPagingSource
 import kotlinx.coroutines.flow.Flow

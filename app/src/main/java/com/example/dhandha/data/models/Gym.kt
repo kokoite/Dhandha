@@ -1,6 +1,6 @@
 package com.example.dhandha.data.models
 
-import com.example.dhandha.data.local.gym.GymUserEntity
+import com.example.dhandha.data.local.entity.GymUserEntity
 import com.example.dhandha.helper.convertStringDateToLong
 import java.util.UUID
 

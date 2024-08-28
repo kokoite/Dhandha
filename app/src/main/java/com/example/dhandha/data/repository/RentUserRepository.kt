@@ -7,18 +7,20 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.room.withTransaction
 import com.example.dhandha.data.local.db.DhandhaDatabase
-import com.example.dhandha.data.local.rent.RentUserEntity
+import com.example.dhandha.data.local.entity.RentUserEntity
 import com.example.dhandha.data.models.RentUserListCell
 import com.example.dhandha.data.paging.RentUserPagingSource
 import com.example.dhandha.helper.convertLongDateToString
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.util.UUID
 import javax.inject.Inject
 
 
 interface RentUserRepository {
     suspend fun getAllUsers(searchQuery: String): Flow<PagingData<RentUserListCell>>
     suspend fun createUser(user: RentUserEntity)
+    suspend fun getUserDetail(userId: UUID): RentUserEntity
     fun editUser()
     fun deleteUser()
 }
@@ -35,12 +37,7 @@ class RentUserRepositoryImpl @Inject constructor(private val db: DhandhaDatabase
             ),
 
             pagingSourceFactory = {
-
-                if(searchQuery.isEmpty()) {
-                   RentUserPagingSource(dao)
-                } else {
-                    dao.searchUser(searchQuery)
-                }
+                RentUserPagingSource(dao, searchQuery)
             }
         ).flow.map {
             it.map {item ->
@@ -61,6 +58,10 @@ class RentUserRepositoryImpl @Inject constructor(private val db: DhandhaDatabase
         db.withTransaction {
             dao.insertUser(user)
         }
+    }
+
+    override suspend fun getUserDetail(userId: UUID): RentUserEntity {
+        return dao.fetchUserDetail(userId)
     }
 
     override fun editUser() {

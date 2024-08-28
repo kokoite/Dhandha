@@ -3,9 +3,8 @@ package com.example.dhandha.data.paging
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import androidx.room.Query
-import com.example.dhandha.data.local.coaching.CoachingUserDao
-import com.example.dhandha.data.local.coaching.CoachingUserEntity
+import com.example.dhandha.data.local.dao.CoachingUserDao
+import com.example.dhandha.data.local.entity.CoachingUserEntity
 import kotlinx.coroutines.delay
 
 class CoachingUserPagingSource(private val dao: CoachingUserDao, private val searchQuery: String): PagingSource<Int, CoachingUserEntity>() {

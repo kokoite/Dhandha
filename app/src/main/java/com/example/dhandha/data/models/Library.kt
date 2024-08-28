@@ -1,7 +1,7 @@
 package com.example.dhandha.data.models
 
 import android.util.Log
-import com.example.dhandha.data.local.library.LibraryUserEntity
+import com.example.dhandha.data.local.entity.LibraryUserEntity
 import com.example.dhandha.helper.convertStringDateToLong
 import java.util.UUID
 
